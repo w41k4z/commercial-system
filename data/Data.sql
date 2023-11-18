@@ -1,5 +1,6 @@
 CREATE USER commercial superuser login PASSWORD 'commercial';
 CREATE DATABASE commercial_system WITH OWNER commercial;
+
 CREATE SEQUENCE "public".account_id_seq START WITH 1 INCREMENT BY 1;
 
 CREATE SEQUENCE "public".article_id_seq START WITH 1 INCREMENT BY 1;
@@ -152,6 +153,9 @@ CREATE  TABLE "public"."purchase order_details" (
 	quantity             double precision  NOT NULL  ,
 	date_need            date  NOT NULL  ,
 	status               integer  NOT NULL  ,
+	sale_price           double precision  NOT NULL  ,
+	vat                  double precision  NOT NULL  ,
+	description          varchar  NOT NULL  ,
 	CONSTRAINT "pk_purchase order_details" PRIMARY KEY ( id ),
 	CONSTRAINT "unq_purchase order_details_id_article" UNIQUE ( id_article ) ,
 	CONSTRAINT "fk_purchase order_details_purchase_order" FOREIGN KEY ( "id_purchase order" ) REFERENCES "public".purchase_order( id ) ON DELETE CASCADE ON UPDATE CASCADE ,

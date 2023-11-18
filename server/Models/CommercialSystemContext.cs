@@ -300,13 +300,21 @@ namespace server.Models
 
                 entity.Property(e => e.DateNeed).HasColumnName("date_need");
 
+                entity.Property(e => e.Description)
+                    .HasColumnType("character varying")
+                    .HasColumnName("description");
+
                 entity.Property(e => e.IdArticle).HasColumnName("id_article");
 
                 entity.Property(e => e.IdPurchaseOrder).HasColumnName("id_purchase order");
 
                 entity.Property(e => e.Quantity).HasColumnName("quantity");
 
+                entity.Property(e => e.SalePrice).HasColumnName("sale_price");
+
                 entity.Property(e => e.Status).HasColumnName("status");
+
+                entity.Property(e => e.Vat).HasColumnName("vat");
 
                 entity.HasOne(d => d.IdArticleNavigation)
                     .WithOne(p => p.PurchaseOrderDetail)
