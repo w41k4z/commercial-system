@@ -10,8 +10,9 @@ namespace server.Models
         public int IdArticle { get; set; }
         public double Quantity { get; set; }
         public DateOnly DateNeed { get; set; }
+        public int Status { get; set; }
 
+        public virtual Article IdArticleNavigation { get; set; } = null!;
         public virtual PurchaseOrder IdPurchaseOrderNavigation { get; set; } = null!;
-        public virtual Article Article { get; set; } = null!;
     }
 }

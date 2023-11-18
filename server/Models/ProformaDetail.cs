@@ -13,7 +13,7 @@ namespace server.Models
         public double SalePrice { get; set; }
         public double TotalPrice { get; set; }
 
-        public virtual Article Article { get; set; } = null!;
-        public virtual Proforma Proforma { get; set; } = null!;
+        public virtual Article IdArticleNavigation { get; set; } = null!;
+        public virtual Proforma IdProformaNavigation { get; set; } = null!;
     }
 }

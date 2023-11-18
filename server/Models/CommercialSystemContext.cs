@@ -82,27 +82,9 @@ namespace server.Models
 
                 entity.HasOne(d => d.IdNavigation)
                     .WithOne(p => p.Article)
-                    .HasPrincipalKey<ArticleSupplier>(p => p.IdArticle)
-                    .HasForeignKey<Article>(d => d.Id)
-                    .HasConstraintName("fk_article_article_supplier");
-
-                entity.HasOne(d => d.Id1)
-                    .WithOne(p => p.Article)
                     .HasPrincipalKey<NeedDetail>(p => p.IdArticle)
                     .HasForeignKey<Article>(d => d.Id)
                     .HasConstraintName("fk_article_need_details");
-
-                entity.HasOne(d => d.Id2)
-                    .WithOne(p => p.Article)
-                    .HasPrincipalKey<ProformaDetail>(p => p.IdArticle)
-                    .HasForeignKey<Article>(d => d.Id)
-                    .HasConstraintName("fk_article_proforma_details");
-
-                entity.HasOne(d => d.Id3)
-                    .WithOne(p => p.Article)
-                    .HasPrincipalKey<PurchaseOrderDetail>(p => p.IdArticle)
-                    .HasForeignKey<Article>(d => d.Id)
-                    .HasConstraintName("fk_article_purchase order_details");
             });
 
             modelBuilder.Entity<ArticleSupplier>(entity =>
@@ -122,25 +104,27 @@ namespace server.Models
                 entity.Property(e => e.IdSupplier).HasColumnName("id_supplier");
 
                 entity.Property(e => e.Status).HasColumnName("status");
+
+                entity.HasOne(d => d.IdArticleNavigation)
+                    .WithOne(p => p.ArticleSupplier)
+                    .HasForeignKey<ArticleSupplier>(d => d.IdArticle)
+                    .HasConstraintName("fk_article_supplier_article");
+
+                entity.HasOne(d => d.IdSupplierNavigation)
+                    .WithOne(p => p.ArticleSupplier)
+                    .HasForeignKey<ArticleSupplier>(d => d.IdSupplier)
+                    .HasConstraintName("fk_article_supplier_supplier");
             });
 
             modelBuilder.Entity<Department>(entity =>
             {
                 entity.ToTable("department");
 
-                entity.Property(e => e.Id)
-                    .ValueGeneratedOnAdd()
-                    .HasColumnName("id");
+                entity.Property(e => e.Id).HasColumnName("id");
 
                 entity.Property(e => e.Name)
                     .HasMaxLength(100)
                     .HasColumnName("name");
-
-                entity.HasOne(d => d.IdNavigation)
-                    .WithOne(p => p.Department)
-                    .HasPrincipalKey<DepartmentNeed>(p => p.IdDepartment)
-                    .HasForeignKey<Department>(d => d.Id)
-                    .HasConstraintName("fk_department_department_needs");
             });
 
             modelBuilder.Entity<DepartmentNeed>(entity =>
@@ -150,9 +134,7 @@ namespace server.Models
                 entity.HasIndex(e => e.IdDepartment, "unq_department_needs_id_department")
                     .IsUnique();
 
-                entity.Property(e => e.Id)
-                    .ValueGeneratedOnAdd()
-                    .HasColumnName("id");
+                entity.Property(e => e.Id).HasColumnName("id");
 
                 entity.Property(e => e.DateNeed).HasColumnName("date_need");
 
@@ -162,11 +144,10 @@ namespace server.Models
 
                 entity.Property(e => e.Validation).HasColumnName("validation");
 
-                entity.HasOne(d => d.IdNavigation)
+                entity.HasOne(d => d.IdDepartmentNavigation)
                     .WithOne(p => p.DepartmentNeed)
-                    .HasPrincipalKey<NeedDetail>(p => p.IdDepartmentNeeds)
-                    .HasForeignKey<DepartmentNeed>(d => d.Id)
-                    .HasConstraintName("fk_department_needs_need_details");
+                    .HasForeignKey<DepartmentNeed>(d => d.IdDepartment)
+                    .HasConstraintName("fk_department_needs_department");
             });
 
             modelBuilder.Entity<NeedDetail>(entity =>
@@ -190,14 +171,16 @@ namespace server.Models
                     .HasColumnName("motif");
 
                 entity.Property(e => e.Quantity).HasColumnName("quantity");
+
+                entity.HasOne(d => d.IdDepartmentNeedsNavigation)
+                    .WithOne(p => p.NeedDetail)
+                    .HasForeignKey<NeedDetail>(d => d.IdDepartmentNeeds)
+                    .HasConstraintName("fk_need_details_department_needs");
             });
 
             modelBuilder.Entity<Proforma>(entity =>
             {
                 entity.ToTable("proforma");
-
-                entity.HasIndex(e => e.IdSupplier, "unq_proforma_id_supplier")
-                    .IsUnique();
 
                 entity.Property(e => e.Id)
                     .HasColumnName("id")
@@ -207,15 +190,7 @@ namespace server.Models
 
                 entity.Property(e => e.IdProformaSend).HasColumnName("id_proforma_send");
 
-                entity.Property(e => e.IdSupplier).HasColumnName("id_supplier");
-
                 entity.Property(e => e.TotalPrice).HasColumnName("total_price");
-
-                entity.HasOne(d => d.IdNavigation)
-                    .WithOne(p => p.Proforma)
-                    .HasPrincipalKey<ProformaDetail>(p => p.IdProforma)
-                    .HasForeignKey<Proforma>(d => d.Id)
-                    .HasConstraintName("fk_proforma_proforma_details");
 
                 entity.HasOne(d => d.IdProformaSendNavigation)
                     .WithMany(p => p.Proformas)
@@ -248,6 +223,16 @@ namespace server.Models
                 entity.Property(e => e.TotalPrice).HasColumnName("total_price");
 
                 entity.Property(e => e.Tva).HasColumnName("tva");
+
+                entity.HasOne(d => d.IdArticleNavigation)
+                    .WithOne(p => p.ProformaDetail)
+                    .HasForeignKey<ProformaDetail>(d => d.IdArticle)
+                    .HasConstraintName("fk_proforma_details_article");
+
+                entity.HasOne(d => d.IdProformaNavigation)
+                    .WithOne(p => p.ProformaDetail)
+                    .HasForeignKey<ProformaDetail>(d => d.IdProforma)
+                    .HasConstraintName("fk_proforma_details_proforma");
             });
 
             modelBuilder.Entity<ProformaSend>(entity =>
@@ -257,6 +242,13 @@ namespace server.Models
                 entity.Property(e => e.Id).HasColumnName("id");
 
                 entity.Property(e => e.DateSend).HasColumnName("date_send");
+
+                entity.Property(e => e.IdSupplier).HasColumnName("id_supplier");
+
+                entity.HasOne(d => d.IdSupplierNavigation)
+                    .WithMany(p => p.ProformaSends)
+                    .HasForeignKey(d => d.IdSupplier)
+                    .HasConstraintName("fk_proforma_send_supplier");
             });
 
             modelBuilder.Entity<ProformaSendDetail>(entity =>
@@ -287,7 +279,14 @@ namespace server.Models
 
                 entity.Property(e => e.DateSend).HasColumnName("date_send");
 
+                entity.Property(e => e.IdSupplier).HasColumnName("id_supplier");
+
                 entity.Property(e => e.Validation).HasColumnName("validation");
+
+                entity.HasOne(d => d.IdSupplierNavigation)
+                    .WithMany(p => p.PurchaseOrders)
+                    .HasForeignKey(d => d.IdSupplier)
+                    .HasConstraintName("fk_purchase_order_supplier");
             });
 
             modelBuilder.Entity<PurchaseOrderDetail>(entity =>
@@ -307,6 +306,13 @@ namespace server.Models
 
                 entity.Property(e => e.Quantity).HasColumnName("quantity");
 
+                entity.Property(e => e.Status).HasColumnName("status");
+
+                entity.HasOne(d => d.IdArticleNavigation)
+                    .WithOne(p => p.PurchaseOrderDetail)
+                    .HasForeignKey<PurchaseOrderDetail>(d => d.IdArticle)
+                    .HasConstraintName("fk_purchase order_details_article");
+
                 entity.HasOne(d => d.IdPurchaseOrderNavigation)
                     .WithMany(p => p.PurchaseOrderDetails)
                     .HasForeignKey(d => d.IdPurchaseOrder)
@@ -317,9 +323,7 @@ namespace server.Models
             {
                 entity.ToTable("supplier");
 
-                entity.Property(e => e.Id)
-                    .ValueGeneratedOnAdd()
-                    .HasColumnName("id");
+                entity.Property(e => e.Id).HasColumnName("id");
 
                 entity.Property(e => e.Address)
                     .HasMaxLength(100)
@@ -336,18 +340,6 @@ namespace server.Models
                 entity.Property(e => e.PhoneNumber)
                     .HasColumnType("character varying")
                     .HasColumnName("phone_number");
-
-                entity.HasOne(d => d.IdNavigation)
-                    .WithOne(p => p.Supplier)
-                    .HasPrincipalKey<ArticleSupplier>(p => p.IdSupplier)
-                    .HasForeignKey<Supplier>(d => d.Id)
-                    .HasConstraintName("fk_supplier_article_supplier");
-
-                entity.HasOne(d => d.Id1)
-                    .WithOne(p => p.Supplier)
-                    .HasPrincipalKey<Proforma>(p => p.IdSupplier)
-                    .HasForeignKey<Supplier>(d => d.Id)
-                    .HasConstraintName("fk_supplier_proforma");
             });
 
             OnModelCreatingPartial(modelBuilder);

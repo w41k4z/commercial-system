@@ -11,7 +11,7 @@ namespace server.Models
         public DateOnly DateNeed { get; set; }
         public int Validation { get; set; }
 
-        public virtual NeedDetail IdNavigation { get; set; } = null!;
-        public virtual Department Department { get; set; } = null!;
+        public virtual Department IdDepartmentNavigation { get; set; } = null!;
+        public virtual NeedDetail NeedDetail { get; set; } = null!;
     }
 }
