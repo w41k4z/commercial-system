@@ -13,7 +13,9 @@ namespace server.Models
 
         public int Id { get; set; }
         public DateOnly DateSend { get; set; }
+        public int IdSupplier { get; set; }
 
+        public virtual Supplier IdSupplierNavigation { get; set; } = null!;
         public virtual ICollection<ProformaSendDetail> ProformaSendDetails { get; set; }
         public virtual ICollection<Proforma> Proformas { get; set; }
     }
