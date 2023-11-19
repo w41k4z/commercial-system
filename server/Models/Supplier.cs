@@ -17,8 +17,8 @@ namespace server.Models
         public string Email { get; set; } = null!;
         public string PhoneNumber { get; set; } = null!;
 
-        public virtual ArticleSupplier ArticleSupplier { get; set; } = null!;
-        public virtual ICollection<ProformaSend> ProformaSends { get; set; }
-        public virtual ICollection<PurchaseOrder> PurchaseOrders { get; set; }
+        public virtual ArticleSupplier? ArticleSupplier { get; set; } = null!;
+        public virtual ICollection<ProformaSend>? ProformaSends { get; set; }
+        public virtual ICollection<PurchaseOrder>? PurchaseOrders { get; set; }
     }
 }

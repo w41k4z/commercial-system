@@ -11,7 +11,7 @@ namespace server.Models
         public double Quantity { get; set; }
         public string Motif { get; set; } = null!;
 
-        public virtual DepartmentNeed IdDepartmentNeedsNavigation { get; set; } = null!;
-        public virtual Article Article { get; set; } = null!;
+        public virtual DepartmentNeed? IdDepartmentNeedsNavigation { get; set; } = null!;
+        public virtual Article? Article { get; set; } = null!;
     }
 }

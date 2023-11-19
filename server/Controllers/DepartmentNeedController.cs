@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using server.Context;
 using server.Models;
 
@@ -25,14 +26,15 @@ public class DepartmentNeedController : ControllerBase
     [HttpGet("{id}")]
     public IActionResult GetEntity(int id)
     {
-        var entity = _dbContext.DepartmentNeeds.FirstOrDefault(e => e.Id == id);
+        var entity = _dbContext.DepartmentNeeds.Include(d => d.NeedDetails).FirstOrDefault(e => e.Id == id);
         return Ok(entity);
     }
 
     [HttpPost]
     public IActionResult CreateEntity(DepartmentNeed entity)
     {
-        entity.DateSend = DateOnly.FromDateTime(DateTime.Now);
+        entity.DateSend = DateTime.Now.ToUniversalTime();
+        entity.DateNeed = entity.DateNeed.ToUniversalTime();
         entity.Validation = 0;
         _dbContext.DepartmentNeeds.Add(entity);
         _dbContext.SaveChanges();
@@ -49,8 +51,8 @@ public class DepartmentNeedController : ControllerBase
         }
 
         entityToUpdate.IdDepartment = entity.IdDepartment;
-        entityToUpdate.DateSend = entity.DateSend;
-        entityToUpdate.DateNeed = entity.DateNeed;
+        entityToUpdate.DateSend = entity.DateSend.ToUniversalTime();
+        entityToUpdate.DateNeed = entity.DateNeed.ToUniversalTime();
         entityToUpdate.Validation = entity.Validation;
 
         _dbContext.SaveChanges();
