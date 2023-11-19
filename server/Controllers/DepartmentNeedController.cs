@@ -33,7 +33,7 @@ public class DepartmentNeedController : ControllerBase
     [HttpPost]
     public IActionResult CreateEntity(DepartmentNeed entity)
     {
-        entity.DateSend = DateTime.Now.ToUniversalTime();
+        entity.DateSend = entity.DateNeed.ToUniversalTime();
         entity.DateNeed = entity.DateNeed.ToUniversalTime();
         entity.Validation = 0;
         _dbContext.DepartmentNeeds.Add(entity);

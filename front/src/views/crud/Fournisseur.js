@@ -43,6 +43,41 @@ const Fournisseur = () => {
       })
   }
 
+  const handleNewSupplierNameChange = (event) => {
+    setNewSupplier({ ...newSupplier, name: event.target.value })
+  }
+
+  const handleNewSupplierAddressChange = (event) => {
+    setNewSupplier({ ...newSupplier, address: event.target.value })
+  }
+
+  const handleNewSupplierEmailChange = (event) => {
+    setNewSupplier({ ...newSupplier, email: event.target.value })
+  }
+
+  const handleNewSupplierPhoneNumberChange = (event) => {
+    setNewSupplier({ ...newSupplier, phoneNumber: event.target.value })
+  }
+
+  const submitNewSupplier = async (event) => {
+    event.preventDefault()
+    await Axios.post('/api/suppliers', newSupplier)
+      .then((res) => {
+        console.log(res.data)
+        const allSuppliers = [...suppliers]
+        allSuppliers.push(res.data)
+        setNewSupplier({
+          name: '',
+          address: '',
+          email: '',
+          phoneNumber: '',
+        })
+      })
+      .catch((error) => {
+        alert(error)
+      })
+  }
+
   return (
     <CRow>
       <CCol xs={12}>
@@ -81,32 +116,6 @@ const Fournisseur = () => {
                     </CTableRow>
                   )
                 })}
-                <CTableRow>
-                  <CTableHeaderCell scope="row">2</CTableHeaderCell>
-                  <CTableDataCell>Jacob</CTableDataCell>
-                  <CTableDataCell>Jacob</CTableDataCell>
-                  <CTableDataCell>Jacob</CTableDataCell>
-                  <CTableDataCell>Jacob</CTableDataCell>
-                  <CTableDataCell>
-                    <CButton color={'danger'}>Delete</CButton>
-                  </CTableDataCell>
-                  <CTableDataCell>
-                    <CButton color={'warning'}>Update</CButton>
-                  </CTableDataCell>
-                </CTableRow>
-                <CTableRow>
-                  <CTableHeaderCell scope="row">3</CTableHeaderCell>
-                  <CTableDataCell>Larry the Bird</CTableDataCell>
-                  <CTableDataCell>Larry the Bird</CTableDataCell>
-                  <CTableDataCell>Larry the Bird</CTableDataCell>
-                  <CTableDataCell>Larry the Bird</CTableDataCell>
-                  <CTableDataCell>
-                    <CButton color={'danger'}>Delete</CButton>
-                  </CTableDataCell>
-                  <CTableDataCell>
-                    <CButton color={'warning'}>Update</CButton>
-                  </CTableDataCell>
-                </CTableRow>
               </CTableBody>
             </CTable>
           </CCardBody>
@@ -124,7 +133,12 @@ const Fournisseur = () => {
                   Nom
                 </CFormLabel>
                 <CCol sm={10}>
-                  <CFormInput type="text" id="nom" />
+                  <CFormInput
+                    value={newSupplier.name}
+                    type="text"
+                    id="nom"
+                    onChange={handleNewSupplierNameChange}
+                  />
                 </CCol>
               </CRow>
               <CRow className="mb-3">
@@ -132,7 +146,12 @@ const Fournisseur = () => {
                   Addresse
                 </CFormLabel>
                 <CCol sm={10}>
-                  <CFormInput type="text" id="addresse" />
+                  <CFormInput
+                    value={newSupplier.address}
+                    type="text"
+                    id="addresse"
+                    onChange={handleNewSupplierAddressChange}
+                  />
                 </CCol>
               </CRow>
               <CRow className="mb-3">
@@ -140,7 +159,12 @@ const Fournisseur = () => {
                   Email
                 </CFormLabel>
                 <CCol sm={10}>
-                  <CFormInput type="email" id="email" />
+                  <CFormInput
+                    value={newSupplier.email}
+                    type="email"
+                    id="email"
+                    onChange={handleNewSupplierEmailChange}
+                  />
                 </CCol>
               </CRow>
               <CRow className="mb-3">
@@ -148,10 +172,17 @@ const Fournisseur = () => {
                   Telephone
                 </CFormLabel>
                 <CCol sm={10}>
-                  <CFormInput type="text" id="telephone" />
+                  <CFormInput
+                    value={newSupplier.phoneNumber}
+                    type="text"
+                    id="telephone"
+                    onChange={handleNewSupplierPhoneNumberChange}
+                  />
                 </CCol>
               </CRow>
-              <CButton type="submit">Valider</CButton>
+              <CButton type="submit" onClick={submitNewSupplier}>
+                Valider
+              </CButton>
             </CForm>
           </CCardBody>
         </CCard>

@@ -24,7 +24,7 @@ const Article = () => {
   const [newArticle, setNewArticle] = useState({ name: '', unit: '' })
   useEffect(() => {
     fetchArticles()
-  }, [articles])
+  }, [])
 
   // Method
   const fetchArticles = async () => {
@@ -56,6 +56,7 @@ const Article = () => {
         const allArticles = [...articles]
         allArticles.push(res.data)
         setArticles(allArticles)
+        setNewArticle({ name: '', unit: '' })
       })
       .catch((error) => {
         alert(error)
