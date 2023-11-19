@@ -12,6 +12,6 @@ namespace server.Models
         public int Validation { get; set; }
 
         public virtual Department IdDepartmentNavigation { get; set; } = null!;
-        public virtual NeedDetail NeedDetail { get; set; } = null!;
+        public virtual ICollection<NeedDetail> NeedDetails { get; set; } = null!;
     }
 }

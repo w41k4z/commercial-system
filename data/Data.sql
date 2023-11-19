@@ -1,4 +1,4 @@
-CREATE USER commercial superuser login PASSWORD 'commercial';
+CREATE USER commercial login PASSWORD 'commercial';
 CREATE DATABASE commercial_system WITH OWNER commercial;
 
 CREATE SEQUENCE "public".account_id_seq START WITH 1 INCREMENT BY 1;

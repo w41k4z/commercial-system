@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using server.Models;
 
-namespace server.Models
+namespace server.Context
 {
     public partial class CommercialSystemContext : DbContext
     {
@@ -82,9 +83,7 @@ namespace server.Models
 
                 entity.HasOne(d => d.IdNavigation)
                     .WithOne(p => p.Article)
-                    .HasPrincipalKey<NeedDetail>(p => p.IdArticle)
-                    .HasForeignKey<Article>(d => d.Id)
-                    .HasConstraintName("fk_article_need_details");
+                    .HasPrincipalKey<NeedDetail>(p => p.IdArticle);
             });
 
             modelBuilder.Entity<ArticleSupplier>(entity =>
@@ -148,6 +147,8 @@ namespace server.Models
                     .WithOne(p => p.DepartmentNeed)
                     .HasForeignKey<DepartmentNeed>(d => d.IdDepartment)
                     .HasConstraintName("fk_department_needs_department");
+                entity.HasMany(d => d.NeedDetails)
+                    .WithOne(p => p.IdDepartmentNeedsNavigation);
             });
 
             modelBuilder.Entity<NeedDetail>(entity =>
@@ -173,9 +174,7 @@ namespace server.Models
                 entity.Property(e => e.Quantity).HasColumnName("quantity");
 
                 entity.HasOne(d => d.IdDepartmentNeedsNavigation)
-                    .WithOne(p => p.NeedDetail)
-                    .HasForeignKey<NeedDetail>(d => d.IdDepartmentNeeds)
-                    .HasConstraintName("fk_need_details_department_needs");
+                    .WithMany(p => p.NeedDetails);
             });
 
             modelBuilder.Entity<Proforma>(entity =>
@@ -349,6 +348,32 @@ namespace server.Models
                     .HasColumnType("character varying")
                     .HasColumnName("phone_number");
             });
+
+            modelBuilder.HasSequence("account_id_seq");
+
+            modelBuilder.HasSequence("article_id_seq");
+
+            modelBuilder.HasSequence("article_supplier_id_seq");
+
+            modelBuilder.HasSequence("department_id_seq");
+
+            modelBuilder.HasSequence("department_needs_id_seq");
+
+            modelBuilder.HasSequence("need_details_id_seq");
+
+            modelBuilder.HasSequence("proforma_send_details_id_seq");
+
+            modelBuilder.HasSequence("proforma_send_id_seq");
+
+            modelBuilder.HasSequence("proformat_details_id_seq");
+
+            modelBuilder.HasSequence("proformat_id_seq");
+
+            modelBuilder.HasSequence("purchase order_details_id_seq");
+
+            modelBuilder.HasSequence("purchase_order_id_seq");
+
+            modelBuilder.HasSequence("supplier_id_seq");
 
             OnModelCreatingPartial(modelBuilder);
         }

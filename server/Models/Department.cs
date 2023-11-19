@@ -13,7 +13,7 @@ namespace server.Models
         public int Id { get; set; }
         public string Name { get; set; } = null!;
 
-        public virtual DepartmentNeed DepartmentNeed { get; set; } = null!;
+        public virtual DepartmentNeed? DepartmentNeed { get; set; }
         public virtual ICollection<Account> Accounts { get; set; }
     }
 }

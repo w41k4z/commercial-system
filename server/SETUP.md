@@ -18,4 +18,4 @@ $ dotnet add package Npgsql.EntityFrameworkCore.PostgreSQL --version 6.0.4 (Npgs
 
   To scaffold:
 
-  $ dotnet ef dbcontext scaffold "Name=ConnectionStrings:DefaultConnection" Npgsql.EntityFrameworkCore.PostgreSQL --output-dir Models --context CommercialSystemContext --no-build
+  $ dotnet ef dbcontext scaffold "Name=ConnectionStrings:DefaultConnection" Npgsql.EntityFrameworkCore.PostgreSQL --output-dir Models --context CommercialSystemContext --context-dir Context --no-build
