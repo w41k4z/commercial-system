@@ -1,4 +1,5 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import Axios from '../../http-client-side/Axios'
 import {
   CButton,
   CCard,
@@ -18,6 +19,65 @@ import {
 } from '@coreui/react'
 
 const Fournisseur = () => {
+  // HOOKS
+  const [suppliers, setSuppliers] = useState([])
+  const [newSupplier, setNewSupplier] = useState({
+    name: '',
+    address: '',
+    email: '',
+    phoneNumber: '',
+  })
+  useEffect(() => {
+    fetchSuppliers()
+  }, [suppliers])
+
+  // Method
+  const fetchSuppliers = async () => {
+    await Axios.get('/api/suppliers')
+      .then((res) => {
+        console.log(res.data)
+        setSuppliers(res.data)
+      })
+      .catch((error) => {
+        alert(error)
+      })
+  }
+
+  const handleNewSupplierNameChange = (event) => {
+    setNewSupplier({ ...newSupplier, name: event.target.value })
+  }
+
+  const handleNewSupplierAddressChange = (event) => {
+    setNewSupplier({ ...newSupplier, address: event.target.value })
+  }
+
+  const handleNewSupplierEmailChange = (event) => {
+    setNewSupplier({ ...newSupplier, email: event.target.value })
+  }
+
+  const handleNewSupplierPhoneNumberChange = (event) => {
+    setNewSupplier({ ...newSupplier, phoneNumber: event.target.value })
+  }
+
+  const submitNewSupplier = async (event) => {
+    event.preventDefault()
+    await Axios.post('/api/suppliers', newSupplier)
+      .then((res) => {
+        console.log(res.data)
+        const allSuppliers = [...suppliers]
+        allSuppliers.push(res.data)
+        setNewSupplier({
+          name: '',
+          address: '',
+          email: '',
+          phoneNumber: '',
+        })
+      })
+      .catch((error) => {
+        alert(error)
+      })
+  }
+
   return (
     <CRow>
       <CCol xs={12}>
@@ -29,7 +89,7 @@ const Fournisseur = () => {
             <CTable>
               <CTableHead>
                 <CTableRow>
-                  <CTableHeaderCell scope="col">Id</CTableHeaderCell>
+                  <CTableHeaderCell scope="col">#</CTableHeaderCell>
                   <CTableHeaderCell scope="col">Nom</CTableHeaderCell>
                   <CTableHeaderCell scope="col">Adresse</CTableHeaderCell>
                   <CTableHeaderCell scope="col">Email</CTableHeaderCell>
@@ -39,45 +99,23 @@ const Fournisseur = () => {
                 </CTableRow>
               </CTableHead>
               <CTableBody>
-                <CTableRow>
-                  <CTableHeaderCell scope="row">1</CTableHeaderCell>
-                  <CTableDataCell>Mark</CTableDataCell>
-                  <CTableDataCell>Mark</CTableDataCell>
-                  <CTableDataCell>Mark</CTableDataCell>
-                  <CTableDataCell>Mark</CTableDataCell>
-                  <CTableDataCell>
-                    <CButton color={'danger'}>Delete</CButton>
-                  </CTableDataCell>
-                  <CTableDataCell>
-                    <CButton color={'warning'}>Update</CButton>
-                  </CTableDataCell>
-                </CTableRow>
-                <CTableRow>
-                  <CTableHeaderCell scope="row">2</CTableHeaderCell>
-                  <CTableDataCell>Jacob</CTableDataCell>
-                  <CTableDataCell>Jacob</CTableDataCell>
-                  <CTableDataCell>Jacob</CTableDataCell>
-                  <CTableDataCell>Jacob</CTableDataCell>
-                  <CTableDataCell>
-                    <CButton color={'danger'}>Delete</CButton>
-                  </CTableDataCell>
-                  <CTableDataCell>
-                    <CButton color={'warning'}>Update</CButton>
-                  </CTableDataCell>
-                </CTableRow>
-                <CTableRow>
-                  <CTableHeaderCell scope="row">3</CTableHeaderCell>
-                  <CTableDataCell>Larry the Bird</CTableDataCell>
-                  <CTableDataCell>Larry the Bird</CTableDataCell>
-                  <CTableDataCell>Larry the Bird</CTableDataCell>
-                  <CTableDataCell>Larry the Bird</CTableDataCell>
-                  <CTableDataCell>
-                    <CButton color={'danger'}>Delete</CButton>
-                  </CTableDataCell>
-                  <CTableDataCell>
-                    <CButton color={'warning'}>Update</CButton>
-                  </CTableDataCell>
-                </CTableRow>
+                {suppliers.map((supplier, index) => {
+                  return (
+                    <CTableRow key={supplier.id}>
+                      <CTableHeaderCell scope="row">{index + 1}</CTableHeaderCell>
+                      <CTableDataCell>{supplier.name}</CTableDataCell>
+                      <CTableDataCell>{supplier.address}</CTableDataCell>
+                      <CTableDataCell>{supplier.email}</CTableDataCell>
+                      <CTableDataCell>{supplier.phoneNumber}</CTableDataCell>
+                      <CTableDataCell>
+                        <CButton color={'danger'}>Delete</CButton>
+                      </CTableDataCell>
+                      <CTableDataCell>
+                        <CButton color={'warning'}>Update</CButton>
+                      </CTableDataCell>
+                    </CTableRow>
+                  )
+                })}
               </CTableBody>
             </CTable>
           </CCardBody>
@@ -95,7 +133,12 @@ const Fournisseur = () => {
                   Nom
                 </CFormLabel>
                 <CCol sm={10}>
-                  <CFormInput type="text" id="nom" />
+                  <CFormInput
+                    value={newSupplier.name}
+                    type="text"
+                    id="nom"
+                    onChange={handleNewSupplierNameChange}
+                  />
                 </CCol>
               </CRow>
               <CRow className="mb-3">
@@ -103,7 +146,12 @@ const Fournisseur = () => {
                   Addresse
                 </CFormLabel>
                 <CCol sm={10}>
-                  <CFormInput type="text" id="addresse" />
+                  <CFormInput
+                    value={newSupplier.address}
+                    type="text"
+                    id="addresse"
+                    onChange={handleNewSupplierAddressChange}
+                  />
                 </CCol>
               </CRow>
               <CRow className="mb-3">
@@ -111,7 +159,12 @@ const Fournisseur = () => {
                   Email
                 </CFormLabel>
                 <CCol sm={10}>
-                  <CFormInput type="email" id="email" />
+                  <CFormInput
+                    value={newSupplier.email}
+                    type="email"
+                    id="email"
+                    onChange={handleNewSupplierEmailChange}
+                  />
                 </CCol>
               </CRow>
               <CRow className="mb-3">
@@ -119,10 +172,17 @@ const Fournisseur = () => {
                   Telephone
                 </CFormLabel>
                 <CCol sm={10}>
-                  <CFormInput type="text" id="telephone" />
+                  <CFormInput
+                    value={newSupplier.phoneNumber}
+                    type="text"
+                    id="telephone"
+                    onChange={handleNewSupplierPhoneNumberChange}
+                  />
                 </CCol>
               </CRow>
-              <CButton type="submit">Valider</CButton>
+              <CButton type="submit" onClick={submitNewSupplier}>
+                Valider
+              </CButton>
             </CForm>
           </CCardBody>
         </CCard>

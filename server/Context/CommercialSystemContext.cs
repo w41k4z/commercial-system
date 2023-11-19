@@ -33,6 +33,7 @@ namespace server.Context
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            optionsBuilder.UseLazyLoadingProxies();
             if (!optionsBuilder.IsConfigured)
             {
                 optionsBuilder.UseNpgsql("Name=ConnectionStrings:DefaultConnection");
@@ -147,6 +148,7 @@ namespace server.Context
                     .WithOne(p => p.DepartmentNeed)
                     .HasForeignKey<DepartmentNeed>(d => d.IdDepartment)
                     .HasConstraintName("fk_department_needs_department");
+
                 entity.HasMany(d => d.NeedDetails)
                     .WithOne(p => p.IdDepartmentNeedsNavigation);
             });
@@ -174,7 +176,8 @@ namespace server.Context
                 entity.Property(e => e.Quantity).HasColumnName("quantity");
 
                 entity.HasOne(d => d.IdDepartmentNeedsNavigation)
-                    .WithMany(p => p.NeedDetails);
+                    .WithMany(p => p.NeedDetails)
+                    .HasForeignKey(d => d.IdDepartmentNeeds);
             });
 
             modelBuilder.Entity<Proforma>(entity =>

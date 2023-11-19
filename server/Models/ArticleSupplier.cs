@@ -10,7 +10,7 @@ namespace server.Models
         public int IdSupplier { get; set; }
         public int Status { get; set; }
 
-        public virtual Article IdArticleNavigation { get; set; } = null!;
-        public virtual Supplier IdSupplierNavigation { get; set; } = null!;
+        public virtual Article? IdArticleNavigation { get; set; } = null!;
+        public virtual Supplier? IdSupplierNavigation { get; set; } = null!;
     }
 }
