@@ -1,4 +1,5 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import Axios from '../../http-client-side/Axios'
 import {
   CButton,
   CCard,
@@ -18,6 +19,30 @@ import {
 } from '@coreui/react'
 
 const Fournisseur = () => {
+  // HOOKS
+  const [suppliers, setSuppliers] = useState([])
+  const [newSupplier, setNewSupplier] = useState({
+    name: '',
+    address: '',
+    email: '',
+    phoneNumber: '',
+  })
+  useEffect(() => {
+    fetchSuppliers()
+  }, [suppliers])
+
+  // Method
+  const fetchSuppliers = async () => {
+    await Axios.get('/api/suppliers')
+      .then((res) => {
+        console.log(res.data)
+        setSuppliers(res.data)
+      })
+      .catch((error) => {
+        alert(error)
+      })
+  }
+
   return (
     <CRow>
       <CCol xs={12}>
@@ -29,7 +54,7 @@ const Fournisseur = () => {
             <CTable>
               <CTableHead>
                 <CTableRow>
-                  <CTableHeaderCell scope="col">Id</CTableHeaderCell>
+                  <CTableHeaderCell scope="col">#</CTableHeaderCell>
                   <CTableHeaderCell scope="col">Nom</CTableHeaderCell>
                   <CTableHeaderCell scope="col">Adresse</CTableHeaderCell>
                   <CTableHeaderCell scope="col">Email</CTableHeaderCell>
@@ -39,19 +64,23 @@ const Fournisseur = () => {
                 </CTableRow>
               </CTableHead>
               <CTableBody>
-                <CTableRow>
-                  <CTableHeaderCell scope="row">1</CTableHeaderCell>
-                  <CTableDataCell>Mark</CTableDataCell>
-                  <CTableDataCell>Mark</CTableDataCell>
-                  <CTableDataCell>Mark</CTableDataCell>
-                  <CTableDataCell>Mark</CTableDataCell>
-                  <CTableDataCell>
-                    <CButton color={'danger'}>Delete</CButton>
-                  </CTableDataCell>
-                  <CTableDataCell>
-                    <CButton color={'warning'}>Update</CButton>
-                  </CTableDataCell>
-                </CTableRow>
+                {suppliers.map((supplier, index) => {
+                  return (
+                    <CTableRow key={supplier.id}>
+                      <CTableHeaderCell scope="row">{index + 1}</CTableHeaderCell>
+                      <CTableDataCell>{supplier.name}</CTableDataCell>
+                      <CTableDataCell>{supplier.address}</CTableDataCell>
+                      <CTableDataCell>{supplier.email}</CTableDataCell>
+                      <CTableDataCell>{supplier.phoneNumber}</CTableDataCell>
+                      <CTableDataCell>
+                        <CButton color={'danger'}>Delete</CButton>
+                      </CTableDataCell>
+                      <CTableDataCell>
+                        <CButton color={'warning'}>Update</CButton>
+                      </CTableDataCell>
+                    </CTableRow>
+                  )
+                })}
                 <CTableRow>
                   <CTableHeaderCell scope="row">2</CTableHeaderCell>
                   <CTableDataCell>Jacob</CTableDataCell>
