@@ -4,6 +4,11 @@ const handleInputNumberFormat = (event) => {
   event.target.value = formattedValue
   event.target.style.textAlign = 'right'
 }
+const handleValueNumberFormat = (number) => {
+  var inputValue = number
+  var formattedValue = formatNumberWithCommas(inputValue)
+  return formattedValue
+}
 const formatNumberWithCommas = (number) => {
   var cleanNumber = number.replace(/,/g, '')
   var decimalIndex = cleanNumber.indexOf('.')
@@ -15,4 +20,4 @@ const formatNumberWithCommas = (number) => {
     return cleanNumber.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
   }
 }
-export default handleInputNumberFormat
+export { handleInputNumberFormat, handleValueNumberFormat }

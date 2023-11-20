@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import NewArticle from './NewArticle'
 import PropTypes from 'prop-types'
-import handleInputNumberFormat from '../NumberFormatter'
+import { handleValueNumberFormat, handleInputNumberFormat } from '../NumberFormatter'
 
 const SecondForm = (props) => {
   const { setParcelCharges_Props, setDiscount_Props, setPayment_Props } = props
@@ -16,17 +16,17 @@ const SecondForm = (props) => {
     var allLine = document.getElementsByClassName('article-line')
     for (let i = 0; i < allLine.length; i++) {
       let line = allLine[i]
-      var Qte = parseFloat(line.getElementsByClassName('form-control')[1].value)
-      var HT = parseFloat(line.getElementsByClassName('form-control')[3].value)
-      var TVA = parseFloat(line.getElementsByClassName('form-control')[4].value)
+      var Qte = parseFloat(line.getElementsByClassName('form-control')[1].value.replace(',', ''))
+      var HT = parseFloat(line.getElementsByClassName('form-control')[3].value.replace(',', ''))
+      var TVA = parseFloat(line.getElementsByClassName('form-control')[4].value.replace(',', ''))
       if (isNaN(Qte) || isNaN(HT) || isNaN(TVA)) continue
       total_HT += Qte * HT
       total_TVA += (total_HT * TVA) / 100
       total_TTC += total_HT + total_TVA
     }
-    setTotalHT(total_HT)
-    setTotalTVA(total_TVA)
-    setTotalTTC(total_TTC)
+    setTotalHT(handleValueNumberFormat(total_HT.toString()))
+    setTotalTVA(handleValueNumberFormat(total_TVA.toString()))
+    setTotalTTC(handleValueNumberFormat(total_TTC.toString()))
   }
   useEffect(() => {
     if (newArticles.length > 1) {
@@ -137,7 +137,6 @@ const SecondForm = (props) => {
                             type="text"
                             disabled
                             value={total_HT}
-                            onChange={handleInputNumberFormat}
                           />
                         </div>
                       </div>
@@ -151,7 +150,6 @@ const SecondForm = (props) => {
                             type="text"
                             disabled
                             value={total_TVA}
-                            onChange={handleInputNumberFormat}
                           />
                         </div>
                       </div>
@@ -165,7 +163,6 @@ const SecondForm = (props) => {
                             type="text"
                             disabled
                             value={total_TTC}
-                            onChange={handleInputNumberFormat}
                           />
                         </div>
                       </div>
@@ -212,18 +209,17 @@ const SecondForm = (props) => {
                               setPayment_Props(e.target.value)
                             }}
                           >
-                            <optgroup label="Payment mode">
+                            <optgroup label="Mode payement">
                               <option value="1" selected="">
                                 -- choose --
                               </option>
                               <option value="1">Cash</option>
-                              <option value="2">UPI</option>
-                              <option value="3">Swiggy</option>
+                              <option value="2">Chèque</option>
                             </optgroup>
                           </select>
                         </div>
                       </div>
-                      <div className="col-xl-6 offset-xl-0 text-end">
+                      <div className="col-xl-12 offset-xl-0 text-end">
                         <a
                           className="btn btn-info btn-sm d-block mt-3 mb-1 btn-smd w-100"
                           role="button"
@@ -235,7 +231,7 @@ const SecondForm = (props) => {
                           <br />
                         </a>
                       </div>
-                      <div className="col-xl-6 offset-xl-0 text-end">
+                      <div className="col-xl-12 offset-xl-0 text-end">
                         <button
                           className="btn btn-danger btn-sm d-block mt-3 mb-1 btn-smd w-100"
                           type="reset"

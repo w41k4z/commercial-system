@@ -84,7 +84,7 @@ const _nav = [
   {
     component: CNavItem,
     name: 'Generer',
-    to: '/empty',
+    to: '/purchase_order/new',
     icon: <CIcon icon={cilPen} customClassName="nav-icon" />,
   },
   {
