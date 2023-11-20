@@ -20,4 +20,6 @@ $ dotnet add package Microsoft.EntityFrameworkCore.Proxies --version 6.0.4 (For 
 
   To scaffold:
 
-  $ dotnet ef dbcontext scaffold "Name=ConnectionStrings:DefaultConnection" Npgsql.EntityFrameworkCore.PostgreSQL --output-dir Models --context CommercialSystemContext --context-dir Context --no-build
+  $ dotnet ef dbcontext scaffold "Name=ConnectionStrings:DefaultConnection" Npgsql.EntityFrameworkCore.PostgreSQL --output-dir Models --context CommercialSystemContext --no-build
+
+dotnet ef dbcontext scaffold "Name=ConnectionStrings:DefaultConnection" Npgsql.EntityFrameworkCore.PostgreSQL --output-dir Models --context CommercialSystemContext --no-build --force
