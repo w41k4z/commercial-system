@@ -131,57 +131,50 @@ const Details = (props) => {
               </thead>
               <tbody>
                 <tr>
-                  <td className="w-10x">ATR0001</td>
-                  <td className="w-10x">Qte</td>
-                  <td className="w-10x">10-10-2021</td>
-                  <td className="w-10x">1000</td>
-                  <td className="w-10x">20</td>
+                  <td className="w-10x">Cache bouche</td>
+                  <td className="w-10x number">100</td>
+                  <td className="w-10x">10-11-2023</td>
+                  <td className="w-10x number">1 000 Ar</td>
+                  <td className="w-10x number">20</td>
                 </tr>
                 <tr>
-                  <td className="w-10x">ATR0001</td>
-                  <td className="w-10x">Qte</td>
-                  <td className="w-10x">10-10-2021</td>
-                  <td className="w-10x">1000</td>
-                  <td className="w-10x">20</td>
+                  <td className="w-10x">Papier A4</td>
+                  <td className="w-10x number">70</td>
+                  <td className="w-10x">10-12-2023</td>
+                  <td className="w-10x number">30 000 Ar</td>
+                  <td className="w-10x number">20</td>
                 </tr>
                 <tr>
-                  <td className="w-10x">ATR0001</td>
-                  <td className="w-10x">Qte</td>
-                  <td className="w-10x">10-10-2021</td>
-                  <td className="w-10x">1000</td>
-                  <td className="w-10x">20</td>
-                </tr>
-                <tr>
-                  <td className="w-10x">ATR0001</td>
-                  <td className="w-10x">Qte</td>
-                  <td className="w-10x">10-10-2021</td>
-                  <td className="w-10x">1000</td>
-                  <td className="w-10x">20</td>
+                  <td className="w-10x">Encre</td>
+                  <td className="w-10x number">80</td>
+                  <td className="w-10x">12-12-2023</td>
+                  <td className="w-10x number">10 000 Ar</td>
+                  <td className="w-10x number">20</td>
                 </tr>
                 <tr>
                   <td colSpan={3} rowSpan={4}></td>
                   <th className="w-10x" style={{ ...textRight }}>
                     Total HT
                   </th>
-                  <td className="w-10x">20</td>
+                  <td className="w-10x number">241 000 Ar</td>
                 </tr>
                 <tr>
                   <th className="w-10x" style={{ ...textRight }}>
                     Total TVA
                   </th>
-                  <td className="w-10x">20</td>
+                  <td className="w-10x number">48 200 Ar</td>
                 </tr>
                 <tr>
-                  <th className="w-10x" style={{ ...textRight }}>
+                  <th className="w-10x number" style={{ ...textRight }}>
                     Frais livraison
                   </th>
-                  <td className="w-10x">20</td>
+                  <td className="w-10x number">60 000 Ar</td>
                 </tr>
                 <tr>
                   <th className="w-10x" style={{ ...textRight }}>
                     Total TTC
                   </th>
-                  <td className="w-10x">20</td>
+                  <td className="w-10x number">108 200 Ar</td>
                 </tr>
               </tbody>
             </table>
