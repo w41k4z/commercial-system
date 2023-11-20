@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "Fai703iN2UYmTjFk2voKPsSMtti7nTUZsM9mnN6E0tM1xsDaEIrTSXNJJJ4XZ0dogCT+ZaMiRwO5uJcp2cmEWg==",
+  "dgSpecHash": "yI3M7YB5rI4ZCK0RLOtg41b99yz8gHLIH10tPGjGxIiK2A3jTPEnlptV4dzQyvxrDFAYZHTPh3t1pYmUzxWw9w==",
   "success": true,
   "projectFilePath": "D:\\Projects\\Visual Studio Code\\commercial-system\\server\\server.csproj",
   "expectedPackageFiles": [
@@ -29,7 +29,9 @@
     "C:\\Users\\kelyd\\.nuget\\packages\\swashbuckle.aspnetcore.swaggerui\\6.2.3\\swashbuckle.aspnetcore.swaggerui.6.2.3.nupkg.sha512",
     "C:\\Users\\kelyd\\.nuget\\packages\\system.collections.immutable\\6.0.0\\system.collections.immutable.6.0.0.nupkg.sha512",
     "C:\\Users\\kelyd\\.nuget\\packages\\system.diagnostics.diagnosticsource\\6.0.0\\system.diagnostics.diagnosticsource.6.0.0.nupkg.sha512",
-    "C:\\Users\\kelyd\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\6.0.0\\system.runtime.compilerservices.unsafe.6.0.0.nupkg.sha512"
+    "C:\\Users\\kelyd\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\6.0.0\\system.runtime.compilerservices.unsafe.6.0.0.nupkg.sha512",
+    "C:\\Users\\kelyd\\.nuget\\packages\\system.text.encodings.web\\7.0.0\\system.text.encodings.web.7.0.0.nupkg.sha512",
+    "C:\\Users\\kelyd\\.nuget\\packages\\system.text.json\\7.0.3\\system.text.json.7.0.3.nupkg.sha512"
   ],
   "logs": []
 }

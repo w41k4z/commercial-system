@@ -7,6 +7,7 @@ namespace server.Models
     {
         public Supplier()
         {
+            ArticleSuppliers = new HashSet<ArticleSupplier>();
             ProformaSends = new HashSet<ProformaSend>();
             PurchaseOrders = new HashSet<PurchaseOrder>();
         }
@@ -17,7 +18,7 @@ namespace server.Models
         public string Email { get; set; } = null!;
         public string PhoneNumber { get; set; } = null!;
 
-        public virtual ArticleSupplier ArticleSupplier { get; set; } = null!;
+        public virtual ICollection<ArticleSupplier> ArticleSuppliers { get; set; }
         public virtual ICollection<ProformaSend> ProformaSends { get; set; }
         public virtual ICollection<PurchaseOrder> PurchaseOrders { get; set; }
     }
