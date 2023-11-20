@@ -1,0 +1,118 @@
+{
+  "version": 3,
+  "targets": {
+    "net6.0": {}
+  },
+  "libraries": {},
+  "projectFileDependencyGroups": {
+    "net6.0": [
+      "Microsoft.EntityFrameworkCore >= 6.0.4",
+      "Microsoft.EntityFrameworkCore.Design >= 6.0.4",
+      "Microsoft.EntityFrameworkCore.Proxies >= 6.0.413",
+      "Npgsql.EntityFrameworkCore.PostgreSQL >= 6.0.4",
+      "Swashbuckle.AspNetCore >= 6.2.3",
+      "System.Text.Json >= 7.0.3"
+    ]
+  },
+  "packageFolders": {
+    "/home/johan/.nuget/packages/": {}
+  },
+  "project": {
+    "version": "1.0.0",
+    "restore": {
+      "projectUniqueName": "/home/johan/Documents/Tovo/New/commercial-system/server/server.csproj",
+      "projectName": "server",
+      "projectPath": "/home/johan/Documents/Tovo/New/commercial-system/server/server.csproj",
+      "packagesPath": "/home/johan/.nuget/packages/",
+      "outputPath": "/home/johan/Documents/Tovo/New/commercial-system/server/obj/",
+      "projectStyle": "PackageReference",
+      "configFilePaths": [
+        "/home/johan/.nuget/NuGet/NuGet.Config"
+      ],
+      "originalTargetFrameworks": [
+        "net6.0"
+      ],
+      "sources": {
+        "https://api.nuget.org/v3/index.json": {}
+      },
+      "frameworks": {
+        "net6.0": {
+          "targetAlias": "net6.0",
+          "projectReferences": {}
+        }
+      },
+      "warningProperties": {
+        "warnAsError": [
+          "NU1605"
+        ]
+      }
+    },
+    "frameworks": {
+      "net6.0": {
+        "targetAlias": "net6.0",
+        "dependencies": {
+          "Microsoft.EntityFrameworkCore": {
+            "target": "Package",
+            "version": "[6.0.4, )"
+          },
+          "Microsoft.EntityFrameworkCore.Design": {
+            "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+            "suppressParent": "All",
+            "target": "Package",
+            "version": "[6.0.4, )"
+          },
+          "Microsoft.EntityFrameworkCore.Proxies": {
+            "target": "Package",
+            "version": "[6.0.413, )"
+          },
+          "Npgsql.EntityFrameworkCore.PostgreSQL": {
+            "target": "Package",
+            "version": "[6.0.4, )"
+          },
+          "Swashbuckle.AspNetCore": {
+            "target": "Package",
+            "version": "[6.2.3, )"
+          },
+          "System.Text.Json": {
+            "target": "Package",
+            "version": "[7.0.3, )"
+          }
+        },
+        "imports": [
+          "net461",
+          "net462",
+          "net47",
+          "net471",
+          "net472",
+          "net48",
+          "net481"
+        ],
+        "assetTargetFallback": true,
+        "warn": true,
+        "frameworkReferences": {
+          "Microsoft.AspNetCore.App": {
+            "privateAssets": "none"
+          },
+          "Microsoft.NETCore.App": {
+            "privateAssets": "all"
+          }
+        },
+        "runtimeIdentifierGraphPath": "/opt/dotnet/sdk/6.0.413/RuntimeIdentifierGraph.json"
+      }
+    }
+  },
+  "logs": [
+    {
+      "code": "NU1301",
+      "level": "Error",
+      "message": "Impossible de charger l'index de service pour la source https://api.nuget.org/v3/index.json.",
+      "libraryId": "Microsoft.EntityFrameworkCore.Proxies"
+    },
+    {
+      "code": "NU1301",
+      "level": "Error",
+      "message": "Impossible de charger l'index de service pour la source https://api.nuget.org/v3/index.json.",
+      "libraryId": "System.Text.Json"
+    }
+  ]
+}
