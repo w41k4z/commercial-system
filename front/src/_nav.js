@@ -87,8 +87,8 @@ const _nav = [
   },
   {
     component: CNavItem,
-    name: 'Liste',
-    to: '/empty',
+    name: 'Validation',
+    to: '/purchase_order/validation',
     icon: <CIcon icon={cilList} customClassName="nav-icon" />,
   },
 ]
