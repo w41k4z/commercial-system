@@ -14,7 +14,6 @@ const PurchaseOrder = React.lazy(() => import('./views/purchase_order/new/New'))
 const PurchaseOrderValidation = React.lazy(() => import('./views/purchase_order/status/Validation'))
 const PurchaseOrderDetails = React.lazy(() => import('./views/purchase_order/status/Details'))
 
-
 const routes = [
   { path: '/crud/article', name: 'Article', element: Article },
   { path: '/crud/fournisseur', name: 'Fournisseur', element: Fournisseur },
