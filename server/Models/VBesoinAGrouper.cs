@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace server.Models
 {
-    public partial class VBesoin
+    public partial class VBesoinAGrouper
     {
         public string? Department { get; set; }
         public string? Article { get; set; }

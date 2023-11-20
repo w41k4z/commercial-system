@@ -111,3 +111,5 @@ D:\Projects\Visual Studio Code\commercial-system\server\obj\Debug\net6.0\ref\ser
 D:\Projects\Visual Studio Code\commercial-system\server\bin\Debug\net6.0\System.Text.Encodings.Web.dll
 D:\Projects\Visual Studio Code\commercial-system\server\bin\Debug\net6.0\System.Text.Json.dll
 D:\Projects\Visual Studio Code\commercial-system\server\bin\Debug\net6.0\runtimes\browser\lib\net6.0\System.Text.Encodings.Web.dll
+D:\Projects\Visual Studio Code\commercial-system\server\bin\Debug\net6.0\Castle.Core.dll
+D:\Projects\Visual Studio Code\commercial-system\server\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.Proxies.dll

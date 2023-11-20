@@ -137,6 +137,15 @@ CREATE  TABLE purchase_order (
 	CONSTRAINT fk_purchase_order_supplier FOREIGN KEY ( id_supplier ) REFERENCES supplier( id ) ON DELETE CASCADE ON UPDATE CASCADE 
  );
 
+CREATE  TABLE need_group_proforma_send ( 
+	id                   serial  NOT NULL  ,
+	id_need_group        integer  NOT NULL  ,
+	id_proforma_send     integer  NOT NULL  ,
+	CONSTRAINT pk_group_need_proforma PRIMARY KEY ( id ),
+	CONSTRAINT fk_need_group_proforma_need_group FOREIGN KEY ( id_need_group ) REFERENCES need_group( id ) ON DELETE CASCADE ON UPDATE CASCADE ,
+	CONSTRAINT fk_need_group_proforma_send_proforma_send FOREIGN KEY ( id_proforma_send ) REFERENCES proforma_send( id ) ON DELETE CASCADE ON UPDATE CASCADE 
+ );
+
 CREATE  TABLE proforma ( 
 	id                   integer DEFAULT nextval('proformat_id_seq'::regclass) NOT NULL  ,
 	date_received        date  NOT NULL  ,
@@ -173,12 +182,12 @@ CREATE  TABLE "purchase order_details" (
 	CONSTRAINT "fk_purchase order_details_article" FOREIGN KEY ( id_article ) REFERENCES article( id ) ON DELETE CASCADE ON UPDATE CASCADE 
  );
 
-CREATE OR REPLACE VIEW v_besoin AS SELECT de.name AS department,     a.name AS article,     n.quantity,     d.date_send,     n.date_need    FROM (((need_details n      JOIN department_needs d ON ((d.id = n.id_department_needs)))      JOIN department de ON ((de.id = d.id_department)))      JOIN article a ON ((a.id = n.id_article)))
+CREATE OR REPLACE VIEW v_besoin AS SELECT de.name AS department,     a.name AS article,     n.quantity,     d.date_send,     n.date_need, n.id_department_needs,n.id as id_need_details,d.validation , a.id AS id_article    FROM (((need_details n      JOIN department_needs d ON ((d.id = n.id_department_needs)))      JOIN department de ON ((de.id = d.id_department)))      JOIN article a ON ((a.id = n.id_article)));
  SELECT de.name AS department,
     a.name AS article,
     n.quantity,
     d.date_send,
-    n.date_need
+    n.date_need,
    FROM (((need_details n
      JOIN department_needs d ON ((d.id = n.id_department_needs)))
      JOIN department de ON ((de.id = d.id_department)))
@@ -199,3 +208,12 @@ INSERT INTO need_details( id, quantity, motif, date_need, id_article, id_departm
 INSERT INTO need_details( id, quantity, motif, date_need, id_article, id_department_needs ) VALUES ( 4, 15.0, 'Routine', '2023-11-28', 2, 3);
 INSERT INTO need_details( id, quantity, motif, date_need, id_article, id_department_needs ) VALUES ( 5, 7.0, 'Critical', '2023-11-29', 3, 1);
 INSERT INTO need_details( id, quantity, motif, date_need, id_article, id_department_needs ) VALUES ( 6, 20.0, 'Urgent', '2023-12-01', 1, 3);
+
+
+-- 
+create or replace view v_besoin_a_grouper as
+select * from v_besoin where validation=1 and id_need_details not in (select id_need_details from need_group_need);
+-- 
+create or replace view v_group_non_proformer as
+select * from need_group where id not in (select id_need_group from need_group_proforma_send);
+-- 

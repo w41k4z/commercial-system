@@ -1,5 +1,5 @@
-import React from 'react'
-import { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import Axios from '../../http-client-side/Axios'
 import {
   CButton,
   CCard,
@@ -20,6 +20,22 @@ import {
 } from '@coreui/react'
 
 const DemandeProforma = () => {
+  const [listebesoin, setListebesoin] = useState([])
+  useEffect(() => {
+    fetchListebesoin()
+  }, [])
+
+  // Method
+  const fetchListebesoin = async () => {
+    await Axios.get('/api/demandeproforma')
+      .then((res) => {
+        console.log(res.data)
+        setListebesoin(res.data)
+      })
+      .catch((error) => {
+        alert(error)
+      })
+  }
   const renderRow = (index) => {
     const removeline = () => {
       const updatedRows = rows.filter((_, i) => i !== index)
@@ -68,13 +84,17 @@ const DemandeProforma = () => {
                 </CTableRow>
               </CTableHead>
               <CTableBody>
-                <CTableRow>
-                  <CTableDataCell>Securite</CTableDataCell>
-                  <CTableDataCell>Gel 500mL</CTableDataCell>
-                  <CTableDataCell>10</CTableDataCell>
-                  <CTableDataCell>2023-11-01</CTableDataCell>
-                  <CTableDataCell>2023-11-10</CTableDataCell>
-                </CTableRow>
+                {listebesoin.map((l, index) => {
+                  return (
+                    <CTableRow key={index}>
+                      <CTableDataCell>{l.department}</CTableDataCell>
+                      <CTableDataCell>{l.article}</CTableDataCell>
+                      <CTableDataCell>{l.quantity}</CTableDataCell>
+                      <CTableDataCell>{l.dateSend}</CTableDataCell>
+                      <CTableDataCell>{l.dateNeed}</CTableDataCell>
+                    </CTableRow>
+                  )
+                })}
               </CTableBody>
             </CTable>
           </CCardBody>
@@ -83,7 +103,7 @@ const DemandeProforma = () => {
       <CCol xs={12}>
         <CCard className="mb-4">
           <CCardHeader>
-            <strong>Groupage des besoins pas encore dans un proforma</strong> <small></small>
+            <strong>Groupage de ces besoins pas encore dans un proforma</strong> <small></small>
           </CCardHeader>
           <CCardBody>
             <CTable>
