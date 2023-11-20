@@ -10,6 +10,8 @@ $ dotnet add package Microsoft.EntityFrameworkCore.Design --version 6.0.4 (Allow
 
 $ dotnet add package Npgsql.EntityFrameworkCore.PostgreSQL --version 6.0.4 (Npgsql is the Entity Framework Core provider for PostgreSQL).
 
+$ dotnet add package Microsoft.EntityFrameworkCore.Proxies --version 6.0.4 (For Lazy loading).
+
 - The Dotnet EF CLI is a useful tool
 
   To install:

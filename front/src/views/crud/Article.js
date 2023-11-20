@@ -1,4 +1,5 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import Axios from '../../http-client-side/Axios'
 import {
   CButton,
   CCard,
@@ -18,6 +19,50 @@ import {
 } from '@coreui/react'
 
 const Article = () => {
+  // HOOKS
+  const [articles, setArticles] = useState([])
+  const [newArticle, setNewArticle] = useState({ name: '', unit: '' })
+  useEffect(() => {
+    fetchArticles()
+  }, [])
+
+  // Method
+  const fetchArticles = async () => {
+    await Axios.get('/api/articles')
+      .then((res) => {
+        console.log(res.data)
+        setArticles(res.data)
+      })
+      .catch((error) => {
+        alert(error)
+      })
+  }
+
+  const handleNewArticleNameChange = (event) => {
+    const article = { name: event.target.value, unit: newArticle.unit }
+    setNewArticle(article)
+  }
+
+  const handleNewArticleUnitChange = (event) => {
+    const article = { name: newArticle.name, unit: event.target.value }
+    setNewArticle(article)
+  }
+
+  // CUD
+  const submitNewArticle = async (event) => {
+    event.preventDefault()
+    await Axios.post('/api/articles', newArticle)
+      .then((res) => {
+        const allArticles = [...articles]
+        allArticles.push(res.data)
+        setArticles(allArticles)
+        setNewArticle({ name: '', unit: '' })
+      })
+      .catch((error) => {
+        alert(error)
+      })
+  }
+
   return (
     <CRow>
       <CCol xs={12}>
@@ -29,43 +74,29 @@ const Article = () => {
             <CTable>
               <CTableHead>
                 <CTableRow>
-                  <CTableHeaderCell scope="col">Id</CTableHeaderCell>
+                  <CTableHeaderCell scope="col">#</CTableHeaderCell>
                   <CTableHeaderCell scope="col">Nom</CTableHeaderCell>
+                  <CTableHeaderCell scope="col">Unité</CTableHeaderCell>
                   <CTableHeaderCell scope="col"></CTableHeaderCell>
                   <CTableHeaderCell scope="col"></CTableHeaderCell>
                 </CTableRow>
               </CTableHead>
               <CTableBody>
-                <CTableRow>
-                  <CTableHeaderCell scope="row">1</CTableHeaderCell>
-                  <CTableDataCell>Mark</CTableDataCell>
-                  <CTableDataCell>
-                    <CButton color={'danger'}>Delete</CButton>
-                  </CTableDataCell>
-                  <CTableDataCell>
-                    <CButton color={'warning'}>Update</CButton>
-                  </CTableDataCell>
-                </CTableRow>
-                <CTableRow>
-                  <CTableHeaderCell scope="row">2</CTableHeaderCell>
-                  <CTableDataCell>Jacob</CTableDataCell>
-                  <CTableDataCell>
-                    <CButton color={'danger'}>Delete</CButton>
-                  </CTableDataCell>
-                  <CTableDataCell>
-                    <CButton color={'warning'}>Update</CButton>
-                  </CTableDataCell>
-                </CTableRow>
-                <CTableRow>
-                  <CTableHeaderCell scope="row">3</CTableHeaderCell>
-                  <CTableDataCell>Larry the Bird</CTableDataCell>
-                  <CTableDataCell>
-                    <CButton color={'danger'}>Delete</CButton>
-                  </CTableDataCell>
-                  <CTableDataCell>
-                    <CButton color={'warning'}>Update</CButton>
-                  </CTableDataCell>
-                </CTableRow>
+                {articles.map((article, index) => {
+                  return (
+                    <CTableRow key={article.id}>
+                      <CTableHeaderCell scope="row">{index + 1}</CTableHeaderCell>
+                      <CTableDataCell>{article.name}</CTableDataCell>
+                      <CTableDataCell>{article.unit}</CTableDataCell>
+                      <CTableDataCell>
+                        <CButton color={'danger'}>Delete</CButton>
+                      </CTableDataCell>
+                      <CTableDataCell>
+                        <CButton color={'warning'}>Update</CButton>
+                      </CTableDataCell>
+                    </CTableRow>
+                  )
+                })}
               </CTableBody>
             </CTable>
           </CCardBody>
@@ -79,14 +110,34 @@ const Article = () => {
           <CCardBody>
             <CForm>
               <CRow className="mb-3">
-                <CFormLabel htmlFor="inputEmail3" className="col-sm-2 col-form-label">
+                <CFormLabel htmlFor="input3" className="col-sm-2 col-form-label">
                   Nom
                 </CFormLabel>
                 <CCol sm={10}>
-                  <CFormInput type="email" id="inputEmail3" />
+                  <CFormInput
+                    value={newArticle.name}
+                    type="text"
+                    id="input3"
+                    onChange={handleNewArticleNameChange}
+                  />
                 </CCol>
               </CRow>
-              <CButton type="submit">Valider</CButton>
+              <CRow className="mb-3">
+                <CFormLabel htmlFor="input4" className="col-sm-2 col-form-label">
+                  Unit
+                </CFormLabel>
+                <CCol sm={10}>
+                  <CFormInput
+                    value={newArticle.unit}
+                    type="text"
+                    id="input4"
+                    onChange={handleNewArticleUnitChange}
+                  />
+                </CCol>
+              </CRow>
+              <CButton type="submit" onClick={submitNewArticle}>
+                Valider
+              </CButton>
             </CForm>
           </CCardBody>
         </CCard>
