@@ -1,5 +1,5 @@
 import React from 'react'
-import handleInputNumberFormat from '../NumberFormatter'
+import { handleInputNumberFormat } from '../NumberFormatter'
 
 const NewArticle = () => {
   return (
@@ -56,5 +56,4 @@ const NewArticle = () => {
     </tr>
   )
 }
-
 export default NewArticle

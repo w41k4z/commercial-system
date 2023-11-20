@@ -6,6 +6,7 @@ const Fournisseur = React.lazy(() => import('./views/crud/Fournisseur'))
 const NouveauBesoin = React.lazy(() => import('./views/besoin/NouveauBesoin'))
 const PurchaseOrder = React.lazy(() => import('./views/purchase_order/new/New'))
 const PurchaseOrderValidation = React.lazy(() => import('./views/purchase_order/status/Validation'))
+const PurchaseOrderDetails = React.lazy(() => import('./views/purchase_order/status/Details'))
 
 const routes = [
   { path: '/crud/article', name: 'Article', element: Article },
@@ -16,6 +17,11 @@ const routes = [
     path: '/purchase_order/validation',
     name: 'Validation de bon de commande',
     element: PurchaseOrderValidation,
+  },
+  {
+    path: '/purchase_order/details',
+    name: 'Validation de bon de commande',
+    element: PurchaseOrderDetails,
   },
   { path: '/empty', name: 'Empty', element: Empty },
 ]
