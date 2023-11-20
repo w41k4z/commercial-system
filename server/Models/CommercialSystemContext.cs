@@ -215,9 +215,7 @@ namespace server.Models
             {
                 entity.ToTable("need_group_proforma_send");
 
-                entity.Property(e => e.Id)
-                    .HasColumnName("id")
-                    .HasDefaultValueSql("nextval('group_need_proforma_id_seq'::regclass)");
+                entity.Property(e => e.Id).HasColumnName("id");
 
                 entity.Property(e => e.IdNeedGroup).HasColumnName("id_need_group");
 
@@ -329,7 +327,19 @@ namespace server.Models
 
                 entity.Property(e => e.DateSend).HasColumnName("date_send");
 
+                entity.Property(e => e.Discount).HasColumnName("discount");
+
                 entity.Property(e => e.IdSupplier).HasColumnName("id_supplier");
+
+                entity.Property(e => e.ParcelCharges).HasColumnName("parcel_charges");
+
+                entity.Property(e => e.Payment).HasColumnName("payment");
+
+                entity.Property(e => e.SumHt).HasColumnName("sum_ht");
+
+                entity.Property(e => e.SumTtc).HasColumnName("sum_ttc");
+
+                entity.Property(e => e.SumVat).HasColumnName("sum_vat");
 
                 entity.Property(e => e.Validation).HasColumnName("validation");
 
@@ -341,18 +351,19 @@ namespace server.Models
 
             modelBuilder.Entity<PurchaseOrderDetail>(entity =>
             {
+                entity.HasNoKey();
+
                 entity.ToTable("purchase order_details");
-
-                entity.HasIndex(e => e.IdArticle, "unq_purchase order_details_id_article")
-                    .IsUnique();
-
-                entity.Property(e => e.Id).HasColumnName("id");
 
                 entity.Property(e => e.DateNeed).HasColumnName("date_need");
 
                 entity.Property(e => e.Description)
                     .HasColumnType("character varying")
                     .HasColumnName("description");
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("id")
+                    .HasDefaultValueSql("nextval('purchase_order_details_id_seq'::regclass)");
 
                 entity.Property(e => e.IdArticle).HasColumnName("id_article");
 
@@ -367,12 +378,12 @@ namespace server.Models
                 entity.Property(e => e.Vat).HasColumnName("vat");
 
                 entity.HasOne(d => d.IdArticleNavigation)
-                    .WithOne(p => p.PurchaseOrderDetail)
-                    .HasForeignKey<PurchaseOrderDetail>(d => d.IdArticle)
+                    .WithMany()
+                    .HasForeignKey(d => d.IdArticle)
                     .HasConstraintName("fk_purchase order_details_article");
 
                 entity.HasOne(d => d.IdPurchaseOrderNavigation)
-                    .WithMany(p => p.PurchaseOrderDetails)
+                    .WithMany()
                     .HasForeignKey(d => d.IdPurchaseOrder)
                     .HasConstraintName("fk_purchase order_details_purchase_order");
             });
@@ -497,7 +508,7 @@ namespace server.Models
 
             modelBuilder.HasSequence("proformat_id_seq");
 
-            modelBuilder.HasSequence("purchase order_details_id_seq");
+            modelBuilder.HasSequence("purchase_order_details_id_seq");
 
             modelBuilder.HasSequence("purchase_order_id_seq");
 

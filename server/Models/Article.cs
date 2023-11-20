@@ -17,7 +17,6 @@ namespace server.Models
         public string Name { get; set; } = null!;
         public string Unit { get; set; } = null!;
 
-        public virtual PurchaseOrderDetail PurchaseOrderDetail { get; set; } = null!;
         public virtual ICollection<ArticleSupplier> ArticleSuppliers { get; set; }
         public virtual ICollection<NeedDetail> NeedDetails { get; set; }
         public virtual ICollection<NeedGroup> NeedGroups { get; set; }
