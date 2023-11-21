@@ -351,9 +351,9 @@ namespace server.Models
 
             modelBuilder.Entity<PurchaseOrderDetail>(entity =>
             {
-                entity.HasNoKey();
+                entity.ToTable("purchase_order_details");
 
-                entity.ToTable("purchase order_details");
+                entity.Property(e => e.Id).HasColumnName("id");
 
                 entity.Property(e => e.DateNeed).HasColumnName("date_need");
 
@@ -367,7 +367,7 @@ namespace server.Models
 
                 entity.Property(e => e.IdArticle).HasColumnName("id_article");
 
-                entity.Property(e => e.IdPurchaseOrder).HasColumnName("id_purchase order");
+                entity.Property(e => e.IdPurchaseOrder).HasColumnName("id_purchase_order");
 
                 entity.Property(e => e.Quantity).HasColumnName("quantity");
 
@@ -380,12 +380,12 @@ namespace server.Models
                 entity.HasOne(d => d.IdArticleNavigation)
                     .WithMany()
                     .HasForeignKey(d => d.IdArticle)
-                    .HasConstraintName("fk_purchase order_details_article");
+                    .HasConstraintName("fk_purchase_order_details_article");
 
                 entity.HasOne(d => d.IdPurchaseOrderNavigation)
                     .WithMany()
                     .HasForeignKey(d => d.IdPurchaseOrder)
-                    .HasConstraintName("fk_purchase order_details_purchase_order");
+                    .HasConstraintName("fk_purchase_order_details_purchase_order");
             });
 
             modelBuilder.Entity<Supplier>(entity =>

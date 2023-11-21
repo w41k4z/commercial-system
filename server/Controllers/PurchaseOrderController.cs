@@ -35,7 +35,7 @@ public class PurchaseOrderController : ControllerBase
     public IActionResult SavePurchaseOrder([FromBody] PurchaseOrderRequest purchaseOrderRequest)
     {
         PurchaseOrder newPurchaseOrder = purchaseOrderRequest.PurchaseOrder;
-        var purchaseOrderDetailsList = purchaseOrderRequest.PurchaseOrderDetails;
+        List<PurchaseOrderDetail> purchaseOrderDetailsList = purchaseOrderRequest.PurchaseOrderDetails;
 
         if (newPurchaseOrder == null || purchaseOrderDetailsList == null)
         {
@@ -50,13 +50,12 @@ public class PurchaseOrderController : ControllerBase
                 _dbContext.PurchaseOrders.Add(newPurchaseOrder);
                 _dbContext.SaveChanges(); // Vous pouvez également utiliser SaveChangesAsync si vous préférez l'asynchrone
 
-                Console.WriteLine("-------------------------------------");
-                Console.WriteLine(newPurchaseOrder.Id);
-                Console.WriteLine("-------------------------------------");
                 // Affectez l'ID de la nouvelle commande d'achat aux détails
                 foreach (var detail in purchaseOrderDetailsList)
                 {
-                    detail.Id = -1;
+                    Console.WriteLine("-------------------------------------");
+                    Console.WriteLine(detail.IdArticle);
+                    Console.WriteLine("-------------------------------------");
                     detail.IdPurchaseOrder = newPurchaseOrder.Id;
                 }
 

@@ -38,7 +38,6 @@ const NewPurchaseOrder = () => {
   const CreatePurchaseOrder = async (event) => {
     event.preventDefault()
     var all_Purchase_Order_Details = CheckBuild_Articles_Purchase_Order_Details()
-    console.log(all_Purchase_Order_Details)
     var purchaseOrderRequest = {
       PurchaseOrder: {
         DateSend: date_send,
@@ -73,13 +72,13 @@ const NewPurchaseOrder = () => {
       var HT = parseFloat(line.getElementsByClassName('form-control')[4].value.replace(',', ''))
       var TVA = parseFloat(line.getElementsByClassName('form-control')[5].value.replace(',', ''))
       all.push({
-        id_article: id_article,
-        quantity: Qte,
-        date_need: date_need,
-        status: 0,
-        sale_price: HT,
-        vat: TVA,
-        description: description,
+        IdArticle: id_article,
+        Quantity: Qte,
+        DateNeed: date_need,
+        Status: 0,
+        SalePrice: HT,
+        Vat: TVA,
+        Description: description,
         IdArticleNavigation: null,
         IdPurchaseOrderNavigation: null,
       })
