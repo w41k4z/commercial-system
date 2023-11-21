@@ -1,7 +1,9 @@
 import React from 'react'
 import { handleInputNumberFormat } from '../NumberFormatter'
+import PropTypes from 'prop-types'
 
-const NewArticle = () => {
+const NewArticle = (props) => {
+  const { articles } = props
   return (
     <tr className="article-line">
       <td className="text-center w-3x pt-2">
@@ -13,9 +15,19 @@ const NewArticle = () => {
             <option value="1" selected="">
               -- Séléctioner article --
             </option>
-            <option value="1">Cheese Burger</option>
-            <option value="2">Cheese Pizza</option>
+            {articles.map((article, index) => {
+              return (
+                <>
+                  <option value={article.id}>{article.name}</option>
+                </>
+              )
+            })}
           </select>
+        </div>
+      </td>
+      <td className="w-10x">
+        <div className="mb-1 form-group">
+          <input className="form-control form-control-sm font-sm" type="text" name="description" />
         </div>
       </td>
       <td className="w-10x">
@@ -55,5 +67,8 @@ const NewArticle = () => {
       </td>
     </tr>
   )
+}
+NewArticle.propTypes = {
+  articles: PropTypes.array.isRequired,
 }
 export default NewArticle

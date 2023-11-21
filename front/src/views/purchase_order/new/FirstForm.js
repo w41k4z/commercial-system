@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 
 const FirstForm = (props) => {
@@ -19,7 +19,14 @@ const FirstForm = (props) => {
     setRef(newRef.replace('-', ''))
     setReference_Props(ref)
   }
-
+  const [suppliers, setSuppliers] = useState([])
+  useEffect(() => {
+    fetch('http://localhost:5034/api/purchase_order/suppliers')
+      .then((res) => res.json())
+      .then((data) => {
+        setSuppliers(data)
+      })
+  }, [date])
   return (
     <div id="form-content" className="multisteps-form__content">
       <div id="input-grp-double" className="card shadow-sm mb-2 db-graph">
@@ -68,9 +75,13 @@ const FirstForm = (props) => {
                     setIdSupplier_Props(e.target.value)
                   }}
                 >
-                  <option value="0">Fournisseur R~001</option>
-                  <option value="1">Fournisseur R~002</option>
-                  <option value="2">Fournisseur R~003</option>
+                  {suppliers.map((supplier, index) => {
+                    return (
+                      <>
+                        <option value={supplier.id}>{supplier.name}</option>
+                      </>
+                    )
+                  })}
                 </select>
               </div>
             </div>

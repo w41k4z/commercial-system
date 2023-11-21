@@ -72,3 +72,17 @@
 /home/alain/Project/MixTech/commercial-system/server/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.Proxies.dll
 /home/johan/Documents/Tovo/New/commercial-system/server/bin/Debug/net6.0/Castle.Core.dll
 /home/johan/Documents/Tovo/New/commercial-system/server/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.Proxies.dll
+/home/johan/Documents/Tovo/New/commercial-system/server/bin/Debug/net6.0/Microsoft.Extensions.Caching.Abstractions.dll
+/home/johan/Documents/Tovo/New/commercial-system/server/bin/Debug/net6.0/Microsoft.Extensions.Configuration.Abstractions.dll
+/home/johan/Documents/Tovo/New/commercial-system/server/bin/Debug/net6.0/Microsoft.Extensions.DependencyInjection.dll
+/home/johan/Documents/Tovo/New/commercial-system/server/bin/Debug/net6.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll
+/home/johan/Documents/Tovo/New/commercial-system/server/bin/Debug/net6.0/Microsoft.Extensions.DependencyModel.dll
+/home/johan/Documents/Tovo/New/commercial-system/server/bin/Debug/net6.0/Microsoft.Extensions.Logging.dll
+/home/johan/Documents/Tovo/New/commercial-system/server/bin/Debug/net6.0/Microsoft.Extensions.Logging.Abstractions.dll
+/home/johan/Documents/Tovo/New/commercial-system/server/bin/Debug/net6.0/Microsoft.Extensions.Options.dll
+/home/johan/Documents/Tovo/New/commercial-system/server/bin/Debug/net6.0/Microsoft.Extensions.Primitives.dll
+/home/johan/Documents/Tovo/New/commercial-system/server/bin/Debug/net6.0/Mono.TextTemplating.dll
+/home/johan/Documents/Tovo/New/commercial-system/server/bin/Debug/net6.0/System.CodeDom.dll
+/home/johan/Documents/Tovo/New/commercial-system/server/bin/Debug/net6.0/System.Text.Encodings.Web.dll
+/home/johan/Documents/Tovo/New/commercial-system/server/bin/Debug/net6.0/System.Text.Json.dll
+/home/johan/Documents/Tovo/New/commercial-system/server/bin/Debug/net6.0/runtimes/browser/lib/net6.0/System.Text.Encodings.Web.dll

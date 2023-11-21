@@ -16,6 +16,6 @@ namespace server.Models
         public double Discount { get; set; }
         public int Payment { get; set; }
 
-        public virtual Supplier IdSupplierNavigation { get; set; } = null!;
+        public virtual Supplier? IdSupplierNavigation { get; set; }
     }
 }
