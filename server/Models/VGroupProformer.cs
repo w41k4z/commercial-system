@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace server.Models
 {
-    public partial class VGroupNonProformer
+    public partial class VGroupProformer
     {
         public int? Id { get; set; }
         public string? Numero { get; set; }

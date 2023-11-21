@@ -215,5 +215,23 @@ create or replace view v_besoin_a_grouper as
 select * from v_besoin where validation=1 and id_need_details not in (select id_need_details from need_group_need);
 -- 
 create or replace view v_group_non_proformer as
-select * from need_group where id not in (select id_need_group from need_group_proforma_send);
+select n.*,a.name as article from need_group n join article a on a.id=n.id_article  where n.id not in (select id_need_group from proforma_send_need_group);
 -- 
+create or replace view v_besoin_a_afficher as
+select v.* from v_besoin v join need_group_need n on n.id_need_details=v.id_need_details where n.id_need_group not in (select id_need_group from proforma_send_need_group);
+-- 
+
+
+INSERT INTO supplier (name, address, email, phone_number)
+VALUES
+    ('Supplier 1', 'Address 1', 'supplier1@example.com', '1234567890'),
+    ('Supplier 2', 'Address 2', 'supplier2@example.com', '9876543210'),
+    ('Supplier 3', 'Address 3', 'supplier3@example.com', '5555555555');
+
+create or replace view v_group_proformer as
+select n.id,n.numero,n.id_article,n.quantity,n.final_date_need,a.name as article  from need_group n join article a on a.id=n.id_article where n.id in (select id_need_group from proforma_send_need_group where id not in (select id_proforma_send from proforma));
+
+create or replace view v_group_proformer_details as 
+select psng.id_need_group as id,ps.id_supplier,s.name as supplier,ps.date_send,ps.numero from proforma_send ps join supplier s on s.id=ps.id_supplier join proforma_send_need_group psng on psng.id_proforma_send=ps.id  where ps.id not in (select id_proforma_send from proforma);
+
+

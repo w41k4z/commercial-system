@@ -24,17 +24,19 @@ namespace server.Models
         public virtual DbSet<NeedDetail> NeedDetails { get; set; } = null!;
         public virtual DbSet<NeedGroup> NeedGroups { get; set; } = null!;
         public virtual DbSet<NeedGroupNeed> NeedGroupNeeds { get; set; } = null!;
-        public virtual DbSet<NeedGroupProformaSend> NeedGroupProformaSends { get; set; } = null!;
         public virtual DbSet<Proforma> Proformas { get; set; } = null!;
         public virtual DbSet<ProformaDetail> ProformaDetails { get; set; } = null!;
         public virtual DbSet<ProformaSend> ProformaSends { get; set; } = null!;
-        public virtual DbSet<ProformaSendDetail> ProformaSendDetails { get; set; } = null!;
+        public virtual DbSet<ProformaSendNeedGroup> ProformaSendNeedGroups { get; set; } = null!;
         public virtual DbSet<PurchaseOrder> PurchaseOrders { get; set; } = null!;
         public virtual DbSet<PurchaseOrderDetail> PurchaseOrderDetails { get; set; } = null!;
         public virtual DbSet<Supplier> Suppliers { get; set; } = null!;
         public virtual DbSet<VBesoin> VBesoins { get; set; } = null!;
+        public virtual DbSet<VBesoinAAfficher> VBesoinAAffichers { get; set; } = null!;
         public virtual DbSet<VBesoinAGrouper> VBesoinAGroupers { get; set; } = null!;
         public virtual DbSet<VGroupNonProformer> VGroupNonProformers { get; set; } = null!;
+        public virtual DbSet<VGroupProformer> VGroupProformers { get; set; } = null!;
+        public virtual DbSet<VGroupProformerDetail> VGroupProformerDetails { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -211,29 +213,6 @@ namespace server.Models
                     .HasConstraintName("fk_need_group_need_need_group");
             });
 
-            modelBuilder.Entity<NeedGroupProformaSend>(entity =>
-            {
-                entity.ToTable("need_group_proforma_send");
-
-                entity.Property(e => e.Id)
-                    .HasColumnName("id")
-                    .HasDefaultValueSql("nextval('group_need_proforma_id_seq'::regclass)");
-
-                entity.Property(e => e.IdNeedGroup).HasColumnName("id_need_group");
-
-                entity.Property(e => e.IdProformaSend).HasColumnName("id_proforma_send");
-
-                entity.HasOne(d => d.IdNeedGroupNavigation)
-                    .WithMany(p => p.NeedGroupProformaSends)
-                    .HasForeignKey(d => d.IdNeedGroup)
-                    .HasConstraintName("fk_need_group_proforma_need_group");
-
-                entity.HasOne(d => d.IdProformaSendNavigation)
-                    .WithMany(p => p.NeedGroupProformaSends)
-                    .HasForeignKey(d => d.IdProformaSend)
-                    .HasConstraintName("fk_need_group_proforma_send_proforma_send");
-            });
-
             modelBuilder.Entity<Proforma>(entity =>
             {
                 entity.ToTable("proforma");
@@ -295,28 +274,35 @@ namespace server.Models
 
                 entity.Property(e => e.IdSupplier).HasColumnName("id_supplier");
 
+                entity.Property(e => e.Numero)
+                    .HasMaxLength(100)
+                    .HasColumnName("numero");
+
                 entity.HasOne(d => d.IdSupplierNavigation)
                     .WithMany(p => p.ProformaSends)
                     .HasForeignKey(d => d.IdSupplier)
                     .HasConstraintName("fk_proforma_send_supplier");
             });
 
-            modelBuilder.Entity<ProformaSendDetail>(entity =>
+            modelBuilder.Entity<ProformaSendNeedGroup>(entity =>
             {
-                entity.ToTable("proforma_send_details");
+                entity.ToTable("proforma_send_need_group");
 
-                entity.Property(e => e.Id).HasColumnName("id");
+                entity.Property(e => e.Id)
+                    .HasColumnName("id")
+                    .HasDefaultValueSql("nextval('proforma_send_details_id_seq'::regclass)");
 
-                entity.Property(e => e.DateNeed).HasColumnName("date_need");
-
-                entity.Property(e => e.IdArticle).HasColumnName("id_article");
+                entity.Property(e => e.IdNeedGroup).HasColumnName("id_need_group");
 
                 entity.Property(e => e.IdProformaSend).HasColumnName("id_proforma_send");
 
-                entity.Property(e => e.Quantity).HasColumnName("quantity");
+                entity.HasOne(d => d.IdNeedGroupNavigation)
+                    .WithMany(p => p.ProformaSendNeedGroups)
+                    .HasForeignKey(d => d.IdNeedGroup)
+                    .HasConstraintName("fk_proforma_send_details_need_group");
 
                 entity.HasOne(d => d.IdProformaSendNavigation)
-                    .WithMany(p => p.ProformaSendDetails)
+                    .WithMany(p => p.ProformaSendNeedGroups)
                     .HasForeignKey(d => d.IdProformaSend)
                     .HasConstraintName("fk_proforma_send_details_proforma_send");
             });
@@ -429,6 +415,35 @@ namespace server.Models
                 entity.Property(e => e.Validation).HasColumnName("validation");
             });
 
+            modelBuilder.Entity<VBesoinAAfficher>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("v_besoin_a_afficher");
+
+                entity.Property(e => e.Article)
+                    .HasMaxLength(100)
+                    .HasColumnName("article");
+
+                entity.Property(e => e.DateNeed).HasColumnName("date_need");
+
+                entity.Property(e => e.DateSend).HasColumnName("date_send");
+
+                entity.Property(e => e.Department)
+                    .HasMaxLength(100)
+                    .HasColumnName("department");
+
+                entity.Property(e => e.IdArticle).HasColumnName("id_article");
+
+                entity.Property(e => e.IdDepartmentNeeds).HasColumnName("id_department_needs");
+
+                entity.Property(e => e.IdNeedDetails).HasColumnName("id_need_details");
+
+                entity.Property(e => e.Quantity).HasColumnName("quantity");
+
+                entity.Property(e => e.Validation).HasColumnName("validation");
+            });
+
             modelBuilder.Entity<VBesoinAGrouper>(entity =>
             {
                 entity.HasNoKey();
@@ -464,6 +479,10 @@ namespace server.Models
 
                 entity.ToView("v_group_non_proformer");
 
+                entity.Property(e => e.Article)
+                    .HasMaxLength(100)
+                    .HasColumnName("article");
+
                 entity.Property(e => e.FinalDateNeed).HasColumnName("final_date_need");
 
                 entity.Property(e => e.Id).HasColumnName("id");
@@ -475,6 +494,50 @@ namespace server.Models
                     .HasColumnName("numero");
 
                 entity.Property(e => e.Quantity).HasColumnName("quantity");
+            });
+
+            modelBuilder.Entity<VGroupProformer>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("v_group_proformer");
+
+                entity.Property(e => e.Article)
+                    .HasMaxLength(100)
+                    .HasColumnName("article");
+
+                entity.Property(e => e.FinalDateNeed).HasColumnName("final_date_need");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.IdArticle).HasColumnName("id_article");
+
+                entity.Property(e => e.Numero)
+                    .HasMaxLength(100)
+                    .HasColumnName("numero");
+
+                entity.Property(e => e.Quantity).HasColumnName("quantity");
+            });
+
+            modelBuilder.Entity<VGroupProformerDetail>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("v_group_proformer_details");
+
+                entity.Property(e => e.DateSend).HasColumnName("date_send");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.IdSupplier).HasColumnName("id_supplier");
+
+                entity.Property(e => e.Numero)
+                    .HasMaxLength(100)
+                    .HasColumnName("numero");
+
+                entity.Property(e => e.Supplier)
+                    .HasMaxLength(100)
+                    .HasColumnName("supplier");
             });
 
             modelBuilder.HasSequence("account_id_seq");

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace server.Models
 {
-    public partial class NeedGroupProformaSend
+    public partial class ProformaSendNeedGroup
     {
         public int Id { get; set; }
         public int IdProformaSend { get; set; }

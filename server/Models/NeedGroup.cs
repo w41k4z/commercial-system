@@ -8,7 +8,7 @@ namespace server.Models
         public NeedGroup()
         {
             NeedGroupNeeds = new HashSet<NeedGroupNeed>();
-            NeedGroupProformaSends = new HashSet<NeedGroupProformaSend>();
+            ProformaSendNeedGroups = new HashSet<ProformaSendNeedGroup>();
         }
 
         public int Id { get; set; }
@@ -19,6 +19,6 @@ namespace server.Models
 
         public virtual Article IdArticleNavigation { get; set; } = null!;
         public virtual ICollection<NeedGroupNeed> NeedGroupNeeds { get; set; }
-        public virtual ICollection<NeedGroupProformaSend> NeedGroupProformaSends { get; set; }
+        public virtual ICollection<ProformaSendNeedGroup> ProformaSendNeedGroups { get; set; }
     }
 }
