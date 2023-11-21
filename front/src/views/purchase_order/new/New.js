@@ -5,8 +5,12 @@ import '../../../assets/purchase_order/css/Billing-Table-with-Add-Row--Fixed-Hea
 import '../../../assets/purchase_order/fonts/font-awesome.min.css'
 import FirstForm from './FirstForm'
 import SecondForm from './SecondForm'
+import Axios from 'src/http-client-side/Axios'
 
 const NewPurchaseOrder = () => {
+  const [total_HT, setTotalHT] = useState(0)
+  const [total_TVA, setTotalTVA] = useState(0)
+  const [total_TTC, setTotalTTC] = useState(0)
   const [date_send, setDate_send] = useState()
   const updateDate_Send = (date) => {
     setDate_send(date)
@@ -31,26 +35,43 @@ const NewPurchaseOrder = () => {
   const updatePayment = (payment) => {
     setPayment(payment)
   }
-  const CreatePurchaseOrder = () => {
+  const CreatePurchaseOrder = async (event) => {
+    event.preventDefault()
     var all_Purchase_Order_Details = CheckBuild_Articles_Purchase_Order_Details()
-    console.log(reference)
-    console.log(date_send)
-    console.log(id_supplier)
-    console.log(parcel_charges)
-    console.log(discount)
-    console.log(payment)
     console.log(all_Purchase_Order_Details)
+    var purchaseOrderRequest = {
+      PurchaseOrder: {
+        DateSend: date_send,
+        IdSupplier: id_supplier,
+        SumHt: parseFloat(total_HT.replace(',', '')),
+        SumVat: parseFloat(total_TVA.replace(',', '')),
+        SumTtc: parseFloat(total_TTC.replace(',', '')),
+        ParcelCharges: parseFloat(parcel_charges.replace(',', '')),
+        Discount: parseFloat(discount.replace(',', '')),
+        Payment: payment,
+        IdSupplierNavigation: null,
+      },
+      PurchaseOrderDetails: all_Purchase_Order_Details,
+    }
+    await Axios.post('/api/purchase_order/save', purchaseOrderRequest)
+      .then((res) => {})
+      .catch((error) => {
+        alert(error)
+      })
   }
   const CheckBuild_Articles_Purchase_Order_Details = () => {
     var all = []
     var allLine = document.getElementsByClassName('article-line')
     for (let i = 0; i < allLine.length - 1; i++) {
       let line = allLine[i]
-      var id_article = parseInt(line.getElementsByClassName('form-control')[0].value)
-      var Qte = parseFloat(line.getElementsByClassName('form-control')[1].value)
-      var date_need = line.getElementsByClassName('form-control')[2].value
-      var HT = parseFloat(line.getElementsByClassName('form-control')[3].value)
-      var TVA = parseFloat(line.getElementsByClassName('form-control')[4].value)
+      var id_article = parseInt(
+        line.getElementsByClassName('form-control')[0].value.replace(',', ''),
+      )
+      var description = line.getElementsByClassName('form-control')[1].value
+      var Qte = parseFloat(line.getElementsByClassName('form-control')[2].value.replace(',', ''))
+      var date_need = line.getElementsByClassName('form-control')[3].value.replace(',', '')
+      var HT = parseFloat(line.getElementsByClassName('form-control')[4].value.replace(',', ''))
+      var TVA = parseFloat(line.getElementsByClassName('form-control')[5].value.replace(',', ''))
       all.push({
         id_article: id_article,
         quantity: Qte,
@@ -58,6 +79,9 @@ const NewPurchaseOrder = () => {
         status: 0,
         sale_price: HT,
         vat: TVA,
+        description: description,
+        IdArticleNavigation: null,
+        IdPurchaseOrderNavigation: null,
       })
     }
     return all
@@ -249,6 +273,12 @@ const NewPurchaseOrder = () => {
                   setParcelCharges_Props={updateParcelCharges}
                   setDiscount_Props={updateDiscount}
                   setPayment_Props={updatePayment}
+                  total_HT={total_HT}
+                  setTotalHT={setTotalHT}
+                  total_TTC={total_TTC}
+                  setTotalTTC={setTotalTTC}
+                  total_TVA={total_TVA}
+                  setTotalTVA={setTotalTVA}
                 />
                 <div id="next-prev-buttons-1" className="button-row offset-10 d-flex mt-4">
                   <button

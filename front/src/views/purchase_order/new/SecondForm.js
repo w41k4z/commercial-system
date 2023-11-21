@@ -4,10 +4,17 @@ import PropTypes from 'prop-types'
 import { handleValueNumberFormat, handleInputNumberFormat } from '../NumberFormatter'
 
 const SecondForm = (props) => {
-  const { setParcelCharges_Props, setDiscount_Props, setPayment_Props } = props
-  const [total_HT, setTotalHT] = useState(0)
-  const [total_TVA, setTotalTVA] = useState(0)
-  const [total_TTC, setTotalTTC] = useState(0)
+  const {
+    setParcelCharges_Props,
+    setDiscount_Props,
+    setPayment_Props,
+    total_HT,
+    setTotalHT,
+    total_TVA,
+    setTotalTVA,
+    total_TTC,
+    setTotalTTC,
+  } = props
   const [newArticles, setArticles] = useState([])
   const update_HT_TVA_TTC = () => {
     var total_HT = 0
@@ -16,12 +23,12 @@ const SecondForm = (props) => {
     var allLine = document.getElementsByClassName('article-line')
     for (let i = 0; i < allLine.length; i++) {
       let line = allLine[i]
-      var Qte = parseFloat(line.getElementsByClassName('form-control')[1].value.replace(',', ''))
-      var HT = parseFloat(line.getElementsByClassName('form-control')[3].value.replace(',', ''))
-      var TVA = parseFloat(line.getElementsByClassName('form-control')[4].value.replace(',', ''))
+      var Qte = parseFloat(line.getElementsByClassName('form-control')[2].value.replace(',', ''))
+      var HT = parseFloat(line.getElementsByClassName('form-control')[4].value.replace(',', ''))
+      var TVA = parseFloat(line.getElementsByClassName('form-control')[5].value.replace(',', ''))
       if (isNaN(Qte) || isNaN(HT) || isNaN(TVA)) continue
       total_HT += Qte * HT
-      total_TVA += (total_HT * TVA) / 100
+      total_TVA += (Qte * HT * TVA) / 100
       total_TTC += total_HT + total_TVA
     }
     setTotalHT(handleValueNumberFormat(total_HT.toString()))
@@ -33,11 +40,21 @@ const SecondForm = (props) => {
       update_HT_TVA_TTC()
     }
   }, [newArticles])
+
+  const [articles, setArticlesData] = useState([])
+  useEffect(() => {
+    fetch('http://localhost:5034/api/purchase_order/articles')
+      .then((res) => res.json())
+      .then((data) => {
+        setArticlesData(data)
+      })
+  }, [newArticles])
+
   const addRow = () => {
     setArticles([
       ...newArticles,
       <>
-        <NewArticle />
+        <NewArticle articles={articles} />
       </>,
     ])
   }
@@ -102,6 +119,9 @@ const SecondForm = (props) => {
                             </th>
                             <th className="w-10x">
                               <strong>Articles</strong>
+                            </th>
+                            <th className="w-10x">
+                              <strong>Desc.</strong>
                             </th>
                             <th className="w-10x">
                               <strong>Qte</strong>
@@ -210,11 +230,9 @@ const SecondForm = (props) => {
                             }}
                           >
                             <optgroup label="Mode payement">
-                              <option value="1" selected="">
-                                -- choose --
-                              </option>
-                              <option value="1">Cash</option>
-                              <option value="2">Chèque</option>
+                              <option selected="">-- choose --</option>
+                              <option value="10">Cash</option>
+                              <option value="20">Chèque</option>
                             </optgroup>
                           </select>
                         </div>
@@ -256,5 +274,11 @@ SecondForm.propTypes = {
   setParcelCharges_Props: PropTypes.func.isRequired,
   setDiscount_Props: PropTypes.func.isRequired,
   setPayment_Props: PropTypes.func.isRequired,
+  total_HT: PropTypes.number,
+  setTotalHT: PropTypes.func.isRequired,
+  total_TVA: PropTypes.number,
+  setTotalTVA: PropTypes.func.isRequired,
+  total_TTC: PropTypes.number,
+  setTotalTTC: PropTypes.func.isRequired,
 }
 export default SecondForm
