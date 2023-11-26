@@ -8,12 +8,13 @@ namespace server.Models
         public Department()
         {
             Accounts = new HashSet<Account>();
+            DepartmentNeeds = new HashSet<DepartmentNeed>();
         }
 
         public int Id { get; set; }
         public string Name { get; set; } = null!;
 
-        public virtual DepartmentNeed? DepartmentNeed { get; set; }
         public virtual ICollection<Account> Accounts { get; set; }
+        public virtual ICollection<DepartmentNeed> DepartmentNeeds { get; set; }
     }
 }
