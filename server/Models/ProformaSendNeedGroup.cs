@@ -3,15 +3,15 @@ using System.Collections.Generic;
 
 namespace server.Models;
 
-public partial class NeedGroupNeed
+public partial class ProformaSendNeedGroup
 {
     public int Id { get; set; }
 
-    public int IdNeedDetails { get; set; }
+    public int IdProformaSend { get; set; }
 
     public int IdNeedGroup { get; set; }
 
-    public virtual NeedDetail IdNeedDetailsNavigation { get; set; } = null!;
-
     public virtual NeedGroup IdNeedGroupNavigation { get; set; } = null!;
+
+    public virtual ProformaSend IdProformaSendNavigation { get; set; } = null!;
 }

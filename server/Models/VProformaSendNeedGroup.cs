@@ -3,9 +3,13 @@ using System.Collections.Generic;
 
 namespace server.Models;
 
-public partial class VGroupNonProformer
+public partial class VProformaSendNeedGroup
 {
     public int? Id { get; set; }
+
+    public int? IdProformaSend { get; set; }
+
+    public int? IdNeedGroup { get; set; }
 
     public string? Numero { get; set; }
 
@@ -15,5 +19,7 @@ public partial class VGroupNonProformer
 
     public DateOnly? FinalDateNeed { get; set; }
 
-    public string? Article { get; set; }
+    public string? ArticleName { get; set; }
+
+    public string? ArticleUnit { get; set; }
 }

@@ -1,20 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace server.Models
+namespace server.Models;
+
+public partial class Department
 {
-    public partial class Department
-    {
-        public Department()
-        {
-            Accounts = new HashSet<Account>();
-            DepartmentNeeds = new HashSet<DepartmentNeed>();
-        }
+    public int Id { get; set; }
 
-        public int Id { get; set; }
-        public string Name { get; set; } = null!;
+    public string Name { get; set; } = null!;
 
-        public virtual ICollection<Account> Accounts { get; set; }
-        public virtual ICollection<DepartmentNeed> DepartmentNeeds { get; set; }
-    }
+    public virtual ICollection<Account> Accounts { get; } = new List<Account>();
+
+    public virtual ICollection<DepartmentNeed> DepartmentNeeds { get; } = new List<DepartmentNeed>();
 }
