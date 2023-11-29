@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "/home/johan/Documents/Tovo/New/commercial-system/server/server.csproj": {}
+    "/home/alain/Project/MixTech/commercial-system/server/server.csproj": {}
   },
   "projects": {
-    "/home/johan/Documents/Tovo/New/commercial-system/server/server.csproj": {
+    "/home/alain/Project/MixTech/commercial-system/server/server.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/johan/Documents/Tovo/New/commercial-system/server/server.csproj",
+        "projectUniqueName": "/home/alain/Project/MixTech/commercial-system/server/server.csproj",
         "projectName": "server",
-        "projectPath": "/home/johan/Documents/Tovo/New/commercial-system/server/server.csproj",
-        "packagesPath": "/home/johan/.nuget/packages/",
-        "outputPath": "/home/johan/Documents/Tovo/New/commercial-system/server/obj/",
+        "projectPath": "/home/alain/Project/MixTech/commercial-system/server/server.csproj",
+        "packagesPath": "/home/alain/.nuget/packages/",
+        "outputPath": "/home/alain/Project/MixTech/commercial-system/server/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/home/johan/.nuget/NuGet/NuGet.Config"
+          "/home/alain/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net6.0"
@@ -40,29 +40,29 @@
           "dependencies": {
             "Microsoft.EntityFrameworkCore": {
               "target": "Package",
-              "version": "[7.0.0, )"
+              "version": "[6.0.4, )"
             },
             "Microsoft.EntityFrameworkCore.Design": {
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
               "suppressParent": "All",
               "target": "Package",
-              "version": "[7.0.0, )"
+              "version": "[6.0.4, )"
             },
             "Microsoft.EntityFrameworkCore.Proxies": {
               "target": "Package",
-              "version": "[7.0.0, )"
+              "version": "[6.0.4, )"
             },
             "Npgsql.EntityFrameworkCore.PostgreSQL": {
               "target": "Package",
-              "version": "[7.0.0, )"
+              "version": "[6.0.4, )"
             },
             "Swashbuckle.AspNetCore": {
               "target": "Package",
-              "version": "[6.2.3, )"
+              "version": "[6.0.4, )"
             },
             "System.Text.Json": {
               "target": "Package",
-              "version": "[7.0.3, )"
+              "version": "[6.0.4, )"
             }
           },
           "imports": [
@@ -76,6 +76,20 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.AspNetCore.App.Ref",
+              "version": "[6.0.8, 6.0.8]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Host.linux-x64",
+              "version": "[6.0.8, 6.0.8]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Ref",
+              "version": "[6.0.8, 6.0.8]"
+            }
+          ],
           "frameworkReferences": {
             "Microsoft.AspNetCore.App": {
               "privateAssets": "none"
@@ -84,7 +98,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/opt/dotnet/sdk/6.0.413/RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/6.0.400/RuntimeIdentifierGraph.json"
         }
       }
     }
