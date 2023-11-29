@@ -16,6 +16,29 @@ public class PurchaseOrderController : ControllerBase
     {
         _dbContext = dbContext;
     }
+    
+    [HttpGet("{id}")]
+    public IActionResult GetById(int id)
+    {
+        var purchase_order = _dbContext.PurchaseOrders
+            .Include(p => p.IdSupplierNavigation)
+            .FirstOrDefault(p => p.Id == id);
+
+        if (purchase_order == null)
+        {
+            return NotFound(); // Retourne un statut 404 si l'achat n'est pas trouvé
+        }
+
+        return Ok(purchase_order);
+    }
+
+
+    [HttpGet("")]
+    public IActionResult GetAll()
+    {
+        var purchase_orders = _dbContext.PurchaseOrders.ToList();
+        return Ok(purchase_orders);
+    }
 
     [HttpGet("suppliers")]
     public IActionResult GetSuppliers()

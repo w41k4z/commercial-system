@@ -1,10 +1,11 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import '../../../assets/purchase_order/css/Details.css'
 import Modal from 'react-modal'
+import PurchaseOrder_conf from '../conf/Dict'
 Modal.setAppElement('#root')
 const Details = (props) => {
-  const { isOpen, onRequestClose } = props
+  const { isOpen, onRequestClose, purchase_order, purchase_order_details } = props
   const primaryColor = {
     color: 'rgb(78, 166, 175)',
   }
@@ -52,6 +53,10 @@ const Details = (props) => {
     modalContent.style.width = '70%'
     modalContent.style.transform = 'translate(-40%, -90%)'
   }
+  // Real content
+  useEffect(() => {
+    console.log(purchase_order)
+  }, [purchase_order, purchase_order_details])
   return (
     <Modal
       isOpen={isOpen}
@@ -84,37 +89,47 @@ const Details = (props) => {
               <label>tel : +261 33 45 567 09</label>
               <br />
             </div>
-            <div className="col-6">
-              <h5>Fournisseur</h5>
-              <label>adresse : 22 avenue Lapa</label>
-              <br />
-              <label>e-mail : joeizn@gmail.com</label>
-              <br />
-              <label>tel : +261 33 45 567 09</label>
-              <br />
-            </div>
+            {purchase_order.idSupplierNavigation && (
+              <div className="col-6">
+                <h5>Fournisseur : {purchase_order.idSupplierNavigation.name}</h5>
+                <label>adresse : {purchase_order.idSupplierNavigation.address}</label>
+                <br />
+                <label>e-mail : {purchase_order.idSupplierNavigation.email}</label>
+                <br />
+                <label>tel : {purchase_order.idSupplierNavigation.phoneNumber}</label>
+                <br />
+              </div>
+            )}
           </div>
           <hr style={{ ...hrStyle }} />
           <div className="row container">
             <table className="col-8 m-auto" id="first-table">
-              <tr>
-                <td>Date</td>
-                <td>
-                  <label>10-10-2023</label>
-                </td>
-              </tr>
-              <tr>
-                <td>Bon de commande n ~</td>
-                <td>
-                  <label>REF202310-09-92</label>
-                </td>
-              </tr>
-              <tr>
-                <td>Emis par </td>
-                <td>
-                  <label>...</label>
-                </td>
-              </tr>
+              <thead>
+                <tr>
+                  <td>Date</td>
+                  <td>
+                    <label>{purchase_order.dateSend}</label>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Bon de commande n ~</td>
+                  <td>
+                    <label>{purchase_order.reference}</label>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Emis par </td>
+                  <td>
+                    <label>...</label>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Payement </td>
+                  <td>
+                    <label>{PurchaseOrder_conf[purchase_order.payment]}</label>
+                  </td>
+                </tr>
+              </thead>
             </table>
           </div>
           <hr style={{ ...hrStyle }} />
@@ -130,51 +145,45 @@ const Details = (props) => {
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td className="w-10x">Cache bouche</td>
-                  <td className="w-10x number">100</td>
-                  <td className="w-10x">10-11-2023</td>
-                  <td className="w-10x number">1 000 Ar</td>
-                  <td className="w-10x number">20</td>
-                </tr>
-                <tr>
-                  <td className="w-10x">Papier A4</td>
-                  <td className="w-10x number">70</td>
-                  <td className="w-10x">10-12-2023</td>
-                  <td className="w-10x number">30 000 Ar</td>
-                  <td className="w-10x number">20</td>
-                </tr>
-                <tr>
-                  <td className="w-10x">Encre</td>
-                  <td className="w-10x number">80</td>
-                  <td className="w-10x">12-12-2023</td>
-                  <td className="w-10x number">10 000 Ar</td>
-                  <td className="w-10x number">20</td>
-                </tr>
+                {purchase_order_details.map((purchase_order_detail, index) => {
+                  return (
+                    <tr key={index}>
+                      <td className="w-10x">
+                        {purchase_order_detail.idArticleNavigation.name}
+                        {'      '}
+                        {purchase_order_detail.idArticleNavigation.unit}
+                      </td>
+                      <td className="w-10x number">{purchase_order_detail.quantity}</td>
+                      <td className="w-10x number">{purchase_order_detail.dateNeed}</td>
+                      <td className="w-10x number">{purchase_order_detail.salePrice} Ar</td>
+                      <td className="w-10x number">{purchase_order_detail.vat}</td>
+                    </tr>
+                  )
+                })}
                 <tr>
                   <td colSpan={3} rowSpan={4}></td>
                   <th className="w-10x" style={{ ...textRight }}>
                     Total HT
                   </th>
-                  <td className="w-10x number">241 000 Ar</td>
+                  <td className="w-10x number">{purchase_order.sumHt} Ar</td>
                 </tr>
                 <tr>
                   <th className="w-10x" style={{ ...textRight }}>
                     Total TVA
                   </th>
-                  <td className="w-10x number">48 200 Ar</td>
+                  <td className="w-10x number">{purchase_order.sumVat} Ar</td>
                 </tr>
                 <tr>
                   <th className="w-10x number" style={{ ...textRight }}>
                     Frais livraison
                   </th>
-                  <td className="w-10x number">60 000 Ar</td>
+                  <td className="w-10x number">{purchase_order.parcelCharges} Ar</td>
                 </tr>
                 <tr>
                   <th className="w-10x" style={{ ...textRight }}>
                     Total TTC
                   </th>
-                  <td className="w-10x number">108 200 Ar</td>
+                  <td className="w-10x number">{purchase_order.sumTtc} Ar</td>
                 </tr>
               </tbody>
             </table>
@@ -201,7 +210,7 @@ const Details = (props) => {
         <br />
         <br />
       </div>
-      <button className="btn btn-danger" onClick={onRequestClose}>
+      <button className="btn btn-danger text-white" onClick={onRequestClose}>
         Close
       </button>
     </Modal>
@@ -210,5 +219,7 @@ const Details = (props) => {
 Details.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   onRequestClose: PropTypes.func.isRequired,
+  purchase_order: PropTypes.any,
+  purchase_order_details: PropTypes.array,
 }
 export default Details

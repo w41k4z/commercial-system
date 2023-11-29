@@ -15,6 +15,7 @@ namespace server.Models
         public double ParcelCharges { get; set; }
         public double Discount { get; set; }
         public int Payment { get; set; }
+        public string Reference { get; set; }
 
         public virtual Supplier? IdSupplierNavigation { get; set; }
     }

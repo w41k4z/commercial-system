@@ -335,6 +335,8 @@ namespace server.Models
 
                 entity.Property(e => e.Payment).HasColumnName("payment");
 
+                entity.Property(e => e.Reference).HasColumnName("reference");
+
                 entity.Property(e => e.SumHt).HasColumnName("sum_ht");
 
                 entity.Property(e => e.SumTtc).HasColumnName("sum_ttc");
