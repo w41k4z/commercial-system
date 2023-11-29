@@ -21,6 +21,7 @@ namespace server.Models
         public virtual DbSet<ArticleSupplier> ArticleSuppliers { get; set; } = null!;
         public virtual DbSet<Department> Departments { get; set; } = null!;
         public virtual DbSet<DepartmentNeed> DepartmentNeeds { get; set; } = null!;
+        public virtual DbSet<MoinsDisant> MoinsDisants { get; set; } = null!;
         public virtual DbSet<NeedDetail> NeedDetails { get; set; } = null!;
         public virtual DbSet<NeedGroup> NeedGroups { get; set; } = null!;
         public virtual DbSet<NeedGroupNeed> NeedGroupNeeds { get; set; } = null!;
@@ -37,6 +38,10 @@ namespace server.Models
         public virtual DbSet<VGroupNonProformer> VGroupNonProformers { get; set; } = null!;
         public virtual DbSet<VGroupProformer> VGroupProformers { get; set; } = null!;
         public virtual DbSet<VGroupProformerDetail> VGroupProformerDetails { get; set; } = null!;
+        public virtual DbSet<VProforma> VProformas { get; set; } = null!;
+        public virtual DbSet<VProformaDetail> VProformaDetails { get; set; } = null!;
+        public virtual DbSet<VProformaSend> VProformaSends { get; set; } = null!;
+        public virtual DbSet<VProformaSendNeedGroup> VProformaSendNeedGroups { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -139,6 +144,39 @@ namespace server.Models
                     .HasConstraintName("fk_department_needs_department");
             });
 
+            modelBuilder.Entity<MoinsDisant>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("moins_disant");
+
+                entity.Property(e => e.ArticleName)
+                    .HasMaxLength(100)
+                    .HasColumnName("article_name");
+
+                entity.Property(e => e.DateReceived).HasColumnName("date_received");
+
+                entity.Property(e => e.NeedNumero)
+                    .HasMaxLength(100)
+                    .HasColumnName("need_numero");
+
+                entity.Property(e => e.ProformaNumero)
+                    .HasMaxLength(100)
+                    .HasColumnName("proforma_numero");
+
+                entity.Property(e => e.Quantity).HasColumnName("quantity");
+
+                entity.Property(e => e.SupplierName)
+                    .HasMaxLength(100)
+                    .HasColumnName("supplier_name");
+
+                entity.Property(e => e.TotalHt).HasColumnName("total_ht");
+
+                entity.Property(e => e.Tva).HasColumnName("tva");
+
+                entity.Property(e => e.UnitPrice).HasColumnName("unit_price");
+            });
+
             modelBuilder.Entity<NeedDetail>(entity =>
             {
                 entity.ToTable("need_details");
@@ -225,7 +263,15 @@ namespace server.Models
 
                 entity.Property(e => e.IdProformaSend).HasColumnName("id_proforma_send");
 
-                entity.Property(e => e.TotalPrice).HasColumnName("total_price");
+                entity.Property(e => e.Numero)
+                    .HasMaxLength(100)
+                    .HasColumnName("numero");
+
+                entity.Property(e => e.TotalHt).HasColumnName("total_ht");
+
+                entity.Property(e => e.TotalTtc).HasColumnName("total_ttc");
+
+                entity.Property(e => e.TotalTva).HasColumnName("total_tva");
 
                 entity.HasOne(d => d.IdProformaSendNavigation)
                     .WithMany(p => p.Proformas)
@@ -243,20 +289,28 @@ namespace server.Models
 
                 entity.Property(e => e.IdArticle).HasColumnName("id_article");
 
+                entity.Property(e => e.IdNeedGroup).HasColumnName("id_need_group");
+
                 entity.Property(e => e.IdProforma).HasColumnName("id_proforma");
 
                 entity.Property(e => e.Quantity).HasColumnName("quantity");
 
-                entity.Property(e => e.SalePrice).HasColumnName("sale_price");
-
-                entity.Property(e => e.TotalPrice).HasColumnName("total_price");
+                entity.Property(e => e.TotalHt).HasColumnName("total_ht");
 
                 entity.Property(e => e.Tva).HasColumnName("tva");
+
+                entity.Property(e => e.UnitPrice).HasColumnName("unit_price");
 
                 entity.HasOne(d => d.IdArticleNavigation)
                     .WithMany(p => p.ProformaDetails)
                     .HasForeignKey(d => d.IdArticle)
                     .HasConstraintName("fk_proforma_details_article");
+
+                entity.HasOne(d => d.IdNeedGroupNavigation)
+                    .WithMany(p => p.ProformaDetails)
+                    .HasForeignKey(d => d.IdNeedGroup)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .HasConstraintName("fk_proforma_details_need_group");
 
                 entity.HasOne(d => d.IdProformaNavigation)
                     .WithMany(p => p.ProformaDetails)
@@ -327,12 +381,14 @@ namespace server.Models
 
             modelBuilder.Entity<PurchaseOrderDetail>(entity =>
             {
-                entity.ToTable("purchase order_details");
+                entity.ToTable("purchase_order_details");
 
                 entity.HasIndex(e => e.IdArticle, "unq_purchase order_details_id_article")
                     .IsUnique();
 
-                entity.Property(e => e.Id).HasColumnName("id");
+                entity.Property(e => e.Id)
+                    .HasColumnName("id")
+                    .HasDefaultValueSql("nextval('\"purchase order_details_id_seq\"'::regclass)");
 
                 entity.Property(e => e.DateNeed).HasColumnName("date_need");
 
@@ -342,7 +398,7 @@ namespace server.Models
 
                 entity.Property(e => e.IdArticle).HasColumnName("id_article");
 
-                entity.Property(e => e.IdPurchaseOrder).HasColumnName("id_purchase order");
+                entity.Property(e => e.IdPurchaseOrder).HasColumnName("id_purchase_order");
 
                 entity.Property(e => e.Quantity).HasColumnName("quantity");
 
@@ -538,6 +594,138 @@ namespace server.Models
                 entity.Property(e => e.Supplier)
                     .HasMaxLength(100)
                     .HasColumnName("supplier");
+            });
+
+            modelBuilder.Entity<VProforma>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("v_proforma");
+
+                entity.Property(e => e.DateReceived).HasColumnName("date_received");
+
+                entity.Property(e => e.DateSend).HasColumnName("date_send");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.IdProformaSend).HasColumnName("id_proforma_send");
+
+                entity.Property(e => e.Numero)
+                    .HasMaxLength(100)
+                    .HasColumnName("numero");
+
+                entity.Property(e => e.NumeroSend)
+                    .HasMaxLength(100)
+                    .HasColumnName("numero_send");
+
+                entity.Property(e => e.Supplier)
+                    .HasMaxLength(100)
+                    .HasColumnName("supplier");
+
+                entity.Property(e => e.TotalHt).HasColumnName("total_ht");
+
+                entity.Property(e => e.TotalTtc).HasColumnName("total_ttc");
+
+                entity.Property(e => e.TotalTva).HasColumnName("total_tva");
+            });
+
+            modelBuilder.Entity<VProformaDetail>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("v_proforma_details");
+
+                entity.Property(e => e.ArticleName)
+                    .HasMaxLength(100)
+                    .HasColumnName("article_name");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.IdArticle).HasColumnName("id_article");
+
+                entity.Property(e => e.IdNeedGroup).HasColumnName("id_need_group");
+
+                entity.Property(e => e.IdProforma).HasColumnName("id_proforma");
+
+                entity.Property(e => e.Numero)
+                    .HasMaxLength(100)
+                    .HasColumnName("numero");
+
+                entity.Property(e => e.Quantity).HasColumnName("quantity");
+
+                entity.Property(e => e.TotalHt).HasColumnName("total_ht");
+
+                entity.Property(e => e.Tva).HasColumnName("tva");
+
+                entity.Property(e => e.Unit)
+                    .HasColumnType("character varying")
+                    .HasColumnName("unit");
+
+                entity.Property(e => e.UnitPrice).HasColumnName("unit_price");
+            });
+
+            modelBuilder.Entity<VProformaSend>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("v_proforma_send");
+
+                entity.Property(e => e.Address)
+                    .HasMaxLength(100)
+                    .HasColumnName("address");
+
+                entity.Property(e => e.DateSend).HasColumnName("date_send");
+
+                entity.Property(e => e.Email)
+                    .HasMaxLength(100)
+                    .HasColumnName("email");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.IdSupplier).HasColumnName("id_supplier");
+
+                entity.Property(e => e.Name)
+                    .HasMaxLength(100)
+                    .HasColumnName("name");
+
+                entity.Property(e => e.Numero)
+                    .HasMaxLength(100)
+                    .HasColumnName("numero");
+
+                entity.Property(e => e.PhoneNumber)
+                    .HasColumnType("character varying")
+                    .HasColumnName("phone_number");
+            });
+
+            modelBuilder.Entity<VProformaSendNeedGroup>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("v_proforma_send_need_group");
+
+                entity.Property(e => e.ArticleName)
+                    .HasMaxLength(100)
+                    .HasColumnName("article_name");
+
+                entity.Property(e => e.ArticleUnit)
+                    .HasColumnType("character varying")
+                    .HasColumnName("article_unit");
+
+                entity.Property(e => e.FinalDateNeed).HasColumnName("final_date_need");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.IdArticle).HasColumnName("id_article");
+
+                entity.Property(e => e.IdNeedGroup).HasColumnName("id_need_group");
+
+                entity.Property(e => e.IdProformaSend).HasColumnName("id_proforma_send");
+
+                entity.Property(e => e.Numero)
+                    .HasMaxLength(100)
+                    .HasColumnName("numero");
+
+                entity.Property(e => e.Quantity).HasColumnName("quantity");
             });
 
             modelBuilder.HasSequence("account_id_seq");

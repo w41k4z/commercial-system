@@ -8,6 +8,7 @@ namespace server.Models
         public NeedGroup()
         {
             NeedGroupNeeds = new HashSet<NeedGroupNeed>();
+            ProformaDetails = new HashSet<ProformaDetail>();
             ProformaSendNeedGroups = new HashSet<ProformaSendNeedGroup>();
         }
 
@@ -19,6 +20,7 @@ namespace server.Models
 
         public virtual Article IdArticleNavigation { get; set; } = null!;
         public virtual ICollection<NeedGroupNeed> NeedGroupNeeds { get; set; }
+        public virtual ICollection<ProformaDetail> ProformaDetails { get; set; }
         public virtual ICollection<ProformaSendNeedGroup> ProformaSendNeedGroups { get; set; }
     }
 }

@@ -229,9 +229,27 @@ VALUES
     ('Supplier 3', 'Address 3', 'supplier3@example.com', '5555555555');
 
 create or replace view v_group_proformer as
-select n.id,n.numero,n.id_article,n.quantity,n.final_date_need,a.name as article  from need_group n join article a on a.id=n.id_article where n.id in (select id_need_group from proforma_send_need_group where id not in (select id_proforma_send from proforma));
+select n.id,n.numero,n.id_article,n.quantity,n.final_date_need,a.name as article  from need_group n join article a on a.id=n.id_article where n.id in (select id_need_group from proforma_send_need_group);
+
 
 create or replace view v_group_proformer_details as 
-select psng.id_need_group as id,ps.id_supplier,s.name as supplier,ps.date_send,ps.numero from proforma_send ps join supplier s on s.id=ps.id_supplier join proforma_send_need_group psng on psng.id_proforma_send=ps.id  where ps.id not in (select id_proforma_send from proforma);
+select psng.id_need_group as id,ps.id_supplier,s.name as supplier,ps.date_send,ps.numero from proforma_send ps join supplier s on s.id=ps.id_supplier join proforma_send_need_group psng on psng.id_proforma_send=ps.id;
 
+
+create or replace view v_proforma_send as
+select ps.*,s.name,s.address,s.email,s.phone_number from proforma_send ps join supplier s on s.id=ps.id_supplier where ps.id not in (select id_proforma_send from proforma);
+
+create or replace view v_proforma_send_need_group as
+select psng.*,ng.numero,ng.id_article,ng.quantity,ng.final_date_need,a.name as article_name,a.unit as article_unit from proforma_send_need_group psng join need_group ng on ng.id=psng.id_need_group join article a on a.id=ng.id_article;
+
+create or replace view v_proforma as
+select p.*,ps.date_send,ps.numero as numero_send,s.name as supplier from proforma p join proforma_send ps on ps.id=p.id_proforma_send join supplier s on s.id=ps.id_supplier;
+
+
+create or replace view v_proforma_details  as 
+select pd.*,a.name as article_name,a.unit,ng.numero from proforma_details pd join  article a on a.id=pd.id_article join need_group ng on ng.id=pd.id_need_group;
+
+
+create or replace view moins_disant as 
+select ng.numero as need_numero,a.name as article_name,pd.quantity,pd.unit_price,pd.tva,pd.total_ht,s.name as supplier_name,p.numero as proforma_numero,p.date_received  from need_group ng join proforma_details pd on ng.id=pd.id_need_group join article a on a.id=pd.id_article join proforma p on p.id=pd.id_proforma join proforma_send ps on ps.id=p.id_proforma_send join supplier s on s.id=ps.id_supplier  where (ng.id,pd.unit_price) in (select id_need_group,min(unit_price) from proforma_details group by id_need_group);
 

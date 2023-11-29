@@ -32,7 +32,6 @@ const DemandeProforma = () => {
   const fetchListebesoin = async () => {
     await Axios.get('/api/demandeproforma')
       .then((res) => {
-        console.log(res.data)
         setListebesoin(res.data.besoinAAfficher)
         setGroupebesoin(res.data.groupNonProformers)
         setFournisseur(res.data.fournisseurs)
@@ -94,7 +93,7 @@ const DemandeProforma = () => {
     while (b != null) {
       besoins.push(parseInt(b.value))
       i++
-      b = document.getElementById('besoins' + i) // Fetch the next element
+      b = document.getElementById('besoins' + i)
     }
     let go = {
       dateenvoie: dateenvoie,
