@@ -35,17 +35,20 @@ CREATE SEQUENCE "public".purchase_order_id_seq START WITH 1 INCREMENT BY 1;
 
 CREATE SEQUENCE "public".supplier_id_seq START WITH 1 INCREMENT BY 1;
 
-CREATE  TABLE "public"."__EFMigrationsHistory" ( 
-	"MigrationId"        varchar(150)  NOT NULL  ,
-	"ProductVersion"     varchar(32)  NOT NULL  ,
-	CONSTRAINT "PK___EFMigrationsHistory" PRIMARY KEY ( "MigrationId" )
- );
-
 CREATE  TABLE "public".article ( 
 	id                   integer DEFAULT nextval('article_id_seq'::regclass) NOT NULL  ,
 	name                 varchar(100)  NOT NULL  ,
 	unit                 varchar  NOT NULL  ,
 	CONSTRAINT pk_article PRIMARY KEY ( id )
+ );
+
+CREATE  TABLE "public".company ( 
+	id                   serial  NOT NULL  ,
+	name                 varchar(100)  NOT NULL  ,
+	address              varchar(100)  NOT NULL  ,
+	tel                  varchar  NOT NULL  ,
+	email                varchar(100)  NOT NULL  ,
+	CONSTRAINT pk_company PRIMARY KEY ( id )
  );
 
 CREATE  TABLE "public".department ( 
@@ -56,23 +59,23 @@ CREATE  TABLE "public".department (
 
 CREATE  TABLE "public".department_needs ( 
 	id                   integer DEFAULT nextval('department_needs_id_seq'::regclass) NOT NULL  ,
-	id_department        integer  NOT NULL  ,
 	date_send            date  NOT NULL  ,
 	validation           integer  NOT NULL  ,
+	id_department        integer  NOT NULL  ,
 	CONSTRAINT pk_needs PRIMARY KEY ( id ),
 	CONSTRAINT fk_department_needs_department FOREIGN KEY ( id_department ) REFERENCES "public".department( id ) ON DELETE CASCADE ON UPDATE CASCADE 
  );
 
 CREATE  TABLE "public".need_details ( 
 	id                   integer DEFAULT nextval('need_details_id_seq'::regclass) NOT NULL  ,
-	id_department_needs  integer  NOT NULL  ,
-	id_article           integer  NOT NULL  ,
-	date_need            date  NOT NULL  ,
 	quantity             double precision  NOT NULL  ,
 	motif                varchar  NOT NULL  ,
+	date_need            date  NOT NULL  ,
+	id_article           integer  NOT NULL  ,
+	id_department_needs  integer  NOT NULL  ,
 	CONSTRAINT pk_need_details PRIMARY KEY ( id ),
-	CONSTRAINT fk_need_details_department_needs FOREIGN KEY ( id_department_needs ) REFERENCES "public".department_needs( id ) ON DELETE CASCADE ON UPDATE CASCADE ,
-	CONSTRAINT fk_need_details_article FOREIGN KEY ( id_article ) REFERENCES "public".article( id ) ON DELETE CASCADE ON UPDATE CASCADE 
+	CONSTRAINT fk_need_details_article FOREIGN KEY ( id_article ) REFERENCES "public".article( id ) ON DELETE CASCADE ON UPDATE CASCADE ,
+	CONSTRAINT fk_need_details_department_needs FOREIGN KEY ( id_department_needs ) REFERENCES "public".department_needs( id ) ON DELETE CASCADE ON UPDATE CASCADE 
  );
 
 CREATE  TABLE "public".need_group ( 
@@ -115,12 +118,12 @@ CREATE  TABLE "public".account (
 
 CREATE  TABLE "public".article_supplier ( 
 	id                   integer DEFAULT nextval('article_supplier_id_seq'::regclass) NOT NULL  ,
-	id_article           integer  NOT NULL  ,
-	id_supplier          integer  NOT NULL  ,
 	status               integer  NOT NULL  ,
+	id_supplier          integer  NOT NULL  ,
+	id_article           integer  NOT NULL  ,
 	CONSTRAINT pk_article_supplier PRIMARY KEY ( id ),
-	CONSTRAINT fk_article_supplier_supplier FOREIGN KEY ( id_supplier ) REFERENCES "public".supplier( id ) ON DELETE CASCADE ON UPDATE CASCADE ,
-	CONSTRAINT fk_article_supplier_article FOREIGN KEY ( id_article ) REFERENCES "public".article( id ) ON DELETE CASCADE ON UPDATE CASCADE 
+	CONSTRAINT fk_article_supplier_article FOREIGN KEY ( id_article ) REFERENCES "public".article( id ) ON DELETE CASCADE ON UPDATE CASCADE ,
+	CONSTRAINT fk_article_supplier_supplier FOREIGN KEY ( id_supplier ) REFERENCES "public".supplier( id ) ON DELETE CASCADE ON UPDATE CASCADE 
  );
 
 CREATE  TABLE "public".proforma_send ( 
@@ -152,6 +155,7 @@ CREATE  TABLE "public".purchase_order (
 	parcel_charges       double precision  NOT NULL  ,
 	discount             double precision  NOT NULL  ,
 	payment              integer  NOT NULL  ,
+	reference            varchar  NOT NULL  ,
 	CONSTRAINT pk_purchase_order PRIMARY KEY ( id ),
 	CONSTRAINT fk_purchase_order_supplier FOREIGN KEY ( id_supplier ) REFERENCES "public".supplier( id ) ON DELETE CASCADE ON UPDATE CASCADE 
  );
@@ -190,15 +194,15 @@ CREATE  TABLE "public".proforma (
 
 CREATE  TABLE "public".proforma_details ( 
 	id                   integer DEFAULT nextval('proformat_details_id_seq'::regclass) NOT NULL  ,
-	id_proforma          integer  NOT NULL  ,
-	id_article           integer  NOT NULL  ,
 	quantity             double precision  NOT NULL  ,
 	tva                  double precision  NOT NULL  ,
 	sale_price           double precision  NOT NULL  ,
 	total_price          double precision  NOT NULL  ,
+	id_proforma          integer  NOT NULL  ,
+	id_article           integer  NOT NULL  ,
 	CONSTRAINT pk_proformat_details PRIMARY KEY ( id ),
-	CONSTRAINT fk_proforma_details_proforma FOREIGN KEY ( id_proforma ) REFERENCES "public".proforma( id ) ON DELETE CASCADE ON UPDATE CASCADE ,
-	CONSTRAINT fk_proforma_details_article FOREIGN KEY ( id_article ) REFERENCES "public".article( id ) ON DELETE CASCADE ON UPDATE CASCADE 
+	CONSTRAINT fk_proforma_details_article FOREIGN KEY ( id_article ) REFERENCES "public".article( id ) ON DELETE CASCADE ON UPDATE CASCADE ,
+	CONSTRAINT fk_proforma_details_proforma FOREIGN KEY ( id_proforma ) REFERENCES "public".proforma( id ) ON DELETE CASCADE ON UPDATE CASCADE 
  );
 
 CREATE VIEW "public".v_besoin AS  SELECT de.name AS department,
@@ -236,3 +240,4 @@ CREATE VIEW "public".v_group_non_proformer AS  SELECT need_group.id,
    FROM need_group
   WHERE (NOT (need_group.id IN ( SELECT need_group_proforma_send.id_need_group
            FROM need_group_proforma_send)));
+
