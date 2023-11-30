@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import Axios from '../../../http-client-side/Axios'
 import {
   CButton,
   CCard,
@@ -21,10 +22,21 @@ const Login = () => {
   const [password, setPassword] = useState('')
   const navigate = useNavigate()
 
-  function login() {
-    if (username === 'admin@gmail.com' && password === 'admin') {
-      navigate('/purchase_order/new')
-    }
+  async function login() {
+    await Axios.post('/api/login?email=' + username + '&password=' + password)
+      .then((res) => {
+        let rs = res.data.status
+        if (rs === 'OK') {
+          let acc = res.data.account
+          localStorage.setItem('account', JSON.stringify(acc))
+          window.location.replace('/#/empty')
+        } else {
+          alert(rs)
+        }
+      })
+      .catch((error) => {
+        alert(error)
+      })
   }
   return (
     <div className="bg-light min-vh-100 d-flex flex-row align-items-center">
@@ -42,8 +54,9 @@ const Login = () => {
                         <CIcon icon={cilUser} />
                       </CInputGroupText>
                       <CFormInput
-                        placeholder="Username"
-                        autoComplete="username"
+                        type="email"
+                        placeholder="Email"
+                        autoComplete="email"
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
                       />
