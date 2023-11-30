@@ -3,6 +3,8 @@ import PropTypes from 'prop-types'
 import '../../../assets/purchase_order/css/Details.css'
 import Modal from 'react-modal'
 import PurchaseOrder_conf from '../conf/Dict'
+import { handleValueNumberFormat } from '../NumberFormatter'
+
 Modal.setAppElement('#root')
 const Details = (props) => {
   const { isOpen, onRequestClose, purchase_order, purchase_order_details } = props
@@ -142,55 +144,83 @@ const Details = (props) => {
           <div className="row container">
             <table className="table table-bordered table-sm">
               <thead className="text-dark font-md">
-                <tr className="text-dark-blue">
-                  <th className="w-10x">Articles</th>
-                  <th className="w-10x">Qte</th>
-                  <th className="w-10x">Date</th>
-                  <th className="w-10x">Prix HT</th>
-                  <th className="w-10x">TVA</th>
+                <tr className="text-dark-blue" style={{ fontSize: '12pt' }}>
+                  <th style={{ color: '#148080', fontWeight: 'bold' }} className="w-10x">
+                    Articles
+                  </th>
+                  <th style={{ color: '#148080', fontWeight: 'bold' }} className="w-10x">
+                    Qte
+                  </th>
+                  <th style={{ color: '#148080', fontWeight: 'bold' }} className="w-10x">
+                    Date
+                  </th>
+                  <th style={{ color: '#148080', fontWeight: 'bold' }} className="w-10x">
+                    Prix HT
+                  </th>
+                  <th style={{ color: '#148080', fontWeight: 'bold' }} className="w-10x">
+                    TVA
+                  </th>
                 </tr>
               </thead>
               <tbody>
                 {purchase_order_details.map((purchase_order_detail, index) => {
                   return (
-                    <tr key={index}>
+                    <tr key={index} className="my-tbody" style={{ fontSize: '10pt' }}>
                       <td className="w-10x">
                         {purchase_order_detail.idArticleNavigation.name}
                         {'      '}
                         {purchase_order_detail.idArticleNavigation.unit}
                       </td>
-                      <td className="w-10x number">{purchase_order_detail.quantity}</td>
+                      <td className="w-10x number">
+                        {handleValueNumberFormat(purchase_order_detail.quantity.toString())}
+                      </td>
                       <td className="w-10x number">{purchase_order_detail.dateNeed}</td>
-                      <td className="w-10x number">{purchase_order_detail.salePrice} Ar</td>
-                      <td className="w-10x number">{purchase_order_detail.vat}</td>
+                      <td className="w-10x number">
+                        {handleValueNumberFormat(purchase_order_detail.salePrice.toString())} Ar
+                      </td>
+                      <td className="w-10x number">
+                        {handleValueNumberFormat(purchase_order_detail.vat.toString())} %
+                      </td>
                     </tr>
                   )
                 })}
-                <tr>
-                  <td colSpan={3} rowSpan={4}></td>
-                  <th className="w-10x" style={{ ...textRight }}>
-                    Total HT
-                  </th>
-                  <td className="w-10x number">{purchase_order.sumHt} Ar</td>
-                </tr>
-                <tr>
-                  <th className="w-10x" style={{ ...textRight }}>
-                    Total TVA
-                  </th>
-                  <td className="w-10x number">{purchase_order.sumVat} Ar</td>
-                </tr>
-                <tr>
-                  <th className="w-10x number" style={{ ...textRight }}>
-                    Frais livraison
-                  </th>
-                  <td className="w-10x number">{purchase_order.parcelCharges} Ar</td>
-                </tr>
-                <tr>
-                  <th className="w-10x" style={{ ...textRight }}>
-                    Total TTC
-                  </th>
-                  <td className="w-10x number">{purchase_order.sumTtc} Ar</td>
-                </tr>
+                {purchase_order && (
+                  <>
+                    <tr>
+                      <td colSpan={3} rowSpan={4}></td>
+                      <th className="w-10x" style={{ ...textRight }}>
+                        Total HT
+                      </th>
+                      <td className="w-10x number">
+                        {handleValueNumberFormat(purchase_order.sumHt.toString())} Ar
+                      </td>
+                    </tr>
+                    <tr>
+                      <th className="w-10x" style={{ ...textRight }}>
+                        Total TVA
+                      </th>
+                      <td className="w-10x number">
+                        {handleValueNumberFormat(purchase_order.sumVat.toString())} Ar
+                      </td>
+                    </tr>
+                    <tr>
+                      <th className="w-10x number" style={{ ...textRight }}>
+                        Frais livraison
+                      </th>
+                      <td className="w-10x number">
+                        {handleValueNumberFormat(purchase_order.parcelCharges.toString())} Ar
+                      </td>
+                    </tr>
+                    <tr>
+                      <th className="w-10x" style={{ ...textRight }}>
+                        Total TTC
+                      </th>
+                      <td className="w-10x number">
+                        {handleValueNumberFormat(purchase_order.sumTtc.toString())} Ar
+                      </td>
+                    </tr>
+                  </>
+                )}
               </tbody>
             </table>
           </div>

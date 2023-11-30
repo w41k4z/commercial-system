@@ -23,7 +23,6 @@ public class PurchaseOrderDetailController : ControllerBase
         var details = _dbContext.PurchaseOrderDetails
             .Where(detail => detail.IdPurchaseOrder == id_purchase_order)
             .Include(detail => detail.IdArticleNavigation)
-            .Include(detail => detail.IdPurchaseOrderNavigation)
             .ToList();
         return Ok(details);
     }
