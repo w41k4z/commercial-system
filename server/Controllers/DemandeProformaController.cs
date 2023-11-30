@@ -186,6 +186,4 @@ Cordialement,
         return Ok("Invalid data received");
     }
 
-
-
 }
