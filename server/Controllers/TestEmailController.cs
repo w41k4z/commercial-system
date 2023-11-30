@@ -15,11 +15,8 @@ public class TeatEmailController : ControllerBase
     {
         try
         {
-            // Sender's email address and credentials
             string senderEmail = "kelydoda758@gmail.com";
             string password = "vbue urgy bohg kemq";
-            
-            // Recipient's email address
             string recipientEmail = "kelydoda724@gmail.com";
 
             MailMessage mail = new MailMessage();
@@ -27,7 +24,6 @@ public class TeatEmailController : ControllerBase
             mail.To.Add(new MailAddress(recipientEmail));
             mail.Subject = "Demande de Proforma";
 
-            // Email content with product/service details
             mail.Body = @"
                 Cher/Chère [Nom du destinataire],
 
@@ -59,16 +55,14 @@ public class TeatEmailController : ControllerBase
                 [Coordonnées de contact]
             ";
 
-            // Create an SMTP client
             SmtpClient smtpClient = new SmtpClient("smtp.gmail.com");
             smtpClient.UseDefaultCredentials = false;
             smtpClient.Port = 587; // Use the appropriate port for your SMTP server
             smtpClient.Credentials = new NetworkCredential(senderEmail, password);
             smtpClient.EnableSsl = true; // Enable SSL/TLS
-            
-            // Send the email
+
             smtpClient.Send(mail);
-           return Ok("Email sent successfully.");
+            return Ok("Email sent successfully.");
         }
         catch (Exception ex)
         {

@@ -19,6 +19,7 @@ namespace server.Models
         public virtual DbSet<Account> Accounts { get; set; } = null!;
         public virtual DbSet<Article> Articles { get; set; } = null!;
         public virtual DbSet<ArticleSupplier> ArticleSuppliers { get; set; } = null!;
+        public virtual DbSet<Company> Companies { get; set; } = null!;
         public virtual DbSet<Department> Departments { get; set; } = null!;
         public virtual DbSet<DepartmentNeed> DepartmentNeeds { get; set; } = null!;
         public virtual DbSet<MoinsDisant> MoinsDisants { get; set; } = null!;
@@ -32,6 +33,7 @@ namespace server.Models
         public virtual DbSet<PurchaseOrder> PurchaseOrders { get; set; } = null!;
         public virtual DbSet<PurchaseOrderDetail> PurchaseOrderDetails { get; set; } = null!;
         public virtual DbSet<Supplier> Suppliers { get; set; } = null!;
+        public virtual DbSet<VArticleEmail> VArticleEmails { get; set; } = null!;
         public virtual DbSet<VBesoin> VBesoins { get; set; } = null!;
         public virtual DbSet<VBesoinAAfficher> VBesoinAAffichers { get; set; } = null!;
         public virtual DbSet<VBesoinAGrouper> VBesoinAGroupers { get; set; } = null!;
@@ -113,6 +115,29 @@ namespace server.Models
                     .WithMany(p => p.ArticleSuppliers)
                     .HasForeignKey(d => d.IdSupplier)
                     .HasConstraintName("fk_article_supplier_supplier");
+            });
+
+            modelBuilder.Entity<Company>(entity =>
+            {
+                entity.ToTable("company");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.Address)
+                    .HasMaxLength(100)
+                    .HasColumnName("address");
+
+                entity.Property(e => e.Email)
+                    .HasMaxLength(100)
+                    .HasColumnName("email");
+
+                entity.Property(e => e.Name)
+                    .HasMaxLength(100)
+                    .HasColumnName("name");
+
+                entity.Property(e => e.Tel)
+                    .HasColumnType("character varying")
+                    .HasColumnName("tel");
             });
 
             modelBuilder.Entity<Department>(entity =>
@@ -369,7 +394,23 @@ namespace server.Models
 
                 entity.Property(e => e.DateSend).HasColumnName("date_send");
 
+                entity.Property(e => e.Discount).HasColumnName("discount");
+
                 entity.Property(e => e.IdSupplier).HasColumnName("id_supplier");
+
+                entity.Property(e => e.ParcelCharges).HasColumnName("parcel_charges");
+
+                entity.Property(e => e.Payment).HasColumnName("payment");
+
+                entity.Property(e => e.Reference)
+                    .HasColumnType("character varying")
+                    .HasColumnName("reference");
+
+                entity.Property(e => e.SumHt).HasColumnName("sum_ht");
+
+                entity.Property(e => e.SumTtc).HasColumnName("sum_ttc");
+
+                entity.Property(e => e.SumVat).HasColumnName("sum_vat");
 
                 entity.Property(e => e.Validation).HasColumnName("validation");
 
@@ -412,11 +453,6 @@ namespace server.Models
                     .WithOne(p => p.PurchaseOrderDetail)
                     .HasForeignKey<PurchaseOrderDetail>(d => d.IdArticle)
                     .HasConstraintName("fk_purchase order_details_article");
-
-                entity.HasOne(d => d.IdPurchaseOrderNavigation)
-                    .WithMany(p => p.PurchaseOrderDetails)
-                    .HasForeignKey(d => d.IdPurchaseOrder)
-                    .HasConstraintName("fk_purchase order_details_purchase_order");
             });
 
             modelBuilder.Entity<Supplier>(entity =>
@@ -440,6 +476,25 @@ namespace server.Models
                 entity.Property(e => e.PhoneNumber)
                     .HasColumnType("character varying")
                     .HasColumnName("phone_number");
+            });
+
+            modelBuilder.Entity<VArticleEmail>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("v_article_email");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.Name)
+                    .HasMaxLength(100)
+                    .HasColumnName("name");
+
+                entity.Property(e => e.Quantity).HasColumnName("quantity");
+
+                entity.Property(e => e.Unit)
+                    .HasColumnType("character varying")
+                    .HasColumnName("unit");
             });
 
             modelBuilder.Entity<VBesoin>(entity =>

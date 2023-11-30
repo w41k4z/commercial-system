@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using server.Models;
 using System.Text.Json;
+using System.Net;
+using System.Net.Mail;
 
 namespace server.Controllers;
 
@@ -106,10 +108,75 @@ public class DemandeProformaController : ControllerBase
                     _dbContext.Add(psd);
                     _dbContext.SaveChanges();
                 }
-                ps.Numero = "ENV"+ps.Id;
+                ps.Numero = "ENV" + ps.Id;
                 _dbContext.Update(ps);
                 _dbContext.SaveChanges();
-                return Ok("OK");
+
+                // Email
+                var supplier = _dbContext.Suppliers.Where(x => x.Id == ps.IdSupplier).First();
+                var details = _dbContext.VArticleEmails.Where(x => x.Id == ps.Id).ToList();
+                var pdetails = "";
+                var i = 1;
+                foreach (var detail in details)
+                {
+                    pdetails += i + ". " + detail.Name + ", "+ detail.Quantity + " "+ detail.Unit + "\n";
+                    i++;
+                }
+                try
+                {
+                    string senderEmail = "kelydoda758@gmail.com";
+                    string password = "vbue urgy bohg kemq";
+                    string recipientEmail = "kelydoda724@gmail.com";
+
+                    MailMessage mail = new MailMessage();
+                    mail.From = new MailAddress(senderEmail);
+                    mail.To.Add(new MailAddress(recipientEmail));
+                    mail.Subject = "Demande de Proforma";
+
+                    mail.Body = $@"
+Cher/Chère {supplier.Name},
+
+J'espère que vous allez bien.
+
+Nous sommes intéressés par vos produits/services et souhaiterions recevoir une proforma pour les articles suivants :
+
+{pdetails}
+
+Veuillez nous fournir une proforma détaillée comprenant les informations suivantes pour chaque article :
+- Description détaillée des produits/services
+- Quantité
+- Prix unitaire
+- Total hors taxes (HT)
+- TVA applicable, le cas échéant
+- Total toutes taxes comprises (TTC)
+- Conditions de paiement et de livraison
+
+Si possible, nous aimerions également connaître les délais de livraison estimés.
+
+Merci d'avance pour votre attention à cette demande. Nous attendons votre proforma avec impatience.
+
+Cordialement,
+
+[Votre nom]
+[Votre poste ou fonction]
+[Nom de votre entreprise]
+[Coordonnées de contact]
+";
+
+                    SmtpClient smtpClient = new SmtpClient("smtp.gmail.com");
+                    smtpClient.UseDefaultCredentials = false;
+                    smtpClient.Port = 587; 
+                    smtpClient.Credentials = new NetworkCredential(senderEmail, password);
+                    smtpClient.EnableSsl = true;
+
+                    smtpClient.Send(mail);
+                    return Ok("OK");
+                }
+                catch (Exception ex)
+                {
+                    return Ok($"Failed to send email: {ex.Message}");
+                }
+                //
             }
             else
             {
@@ -119,6 +186,6 @@ public class DemandeProformaController : ControllerBase
         return Ok("Invalid data received");
     }
 
-    
+
 
 }

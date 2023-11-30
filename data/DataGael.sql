@@ -253,5 +253,10 @@ select pd.*,a.name as article_name,a.unit,ng.numero from proforma_details pd joi
 create or replace view moins_disant as 
 select ng.numero as need_numero,a.name as article_name,pd.quantity,pd.unit_price,pd.tva,pd.total_ht,s.name as supplier_name,p.numero as proforma_numero,p.date_received  from need_group ng join proforma_details pd on ng.id=pd.id_need_group join article a on a.id=pd.id_article join proforma p on p.id=pd.id_proforma join proforma_send ps on ps.id=p.id_proforma_send join supplier s on s.id=ps.id_supplier  where (ng.id,pd.unit_price) in (select id_need_group,min(unit_price) from proforma_details group by id_need_group);
 
+create or replace view v_article_email as
+select ps.id,ng.quantity,a.name,a.unit from proforma_send ps join proforma_send_need_group psng on ps.id=psng.id_proforma_send join need_group ng on ng.id=psng.id_need_group join article a on a.id=ng.id_article;
+
+
+
 
 vbue urgy bohg kemq
