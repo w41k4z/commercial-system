@@ -54,8 +54,14 @@ const Details = (props) => {
     modalContent.style.transform = 'translate(-40%, -90%)'
   }
   // Real content
+  const [company, setCompany] = useState()
   useEffect(() => {
-    console.log(purchase_order)
+    fetch('http://localhost:5034/api/company')
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data)
+        setCompany(data)
+      })
   }, [purchase_order, purchase_order_details])
   return (
     <Modal

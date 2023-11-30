@@ -27,5 +27,5 @@ public partial class PurchaseOrder
 
     public string Reference { get; set; } = null!;
 
-    public virtual Supplier IdSupplierNavigation { get; set; } = null!;
+    public virtual Supplier? IdSupplierNavigation { get; set; } = null!;
 }

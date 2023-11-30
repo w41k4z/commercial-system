@@ -153,7 +153,7 @@ const SecondForm = (props) => {
                       <div className="col-xl-7 offset-xl-0 text-end align-self-center">
                         <div className="mb-1 form-group">
                           <input
-                            className="form-control form-control-sm font-sm"
+                            className="number-input form-control form-control-sm font-sm"
                             type="text"
                             disabled
                             value={total_HT}
@@ -166,7 +166,7 @@ const SecondForm = (props) => {
                       <div className="col-xl-7 offset-xl-0 text-end align-self-center">
                         <div className="mb-1 form-group">
                           <input
-                            className="form-control form-control-sm font-sm"
+                            className="number-input form-control form-control-sm font-sm"
                             type="text"
                             disabled
                             value={total_TVA}
@@ -179,7 +179,7 @@ const SecondForm = (props) => {
                       <div className="col-xl-7 offset-xl-0 text-end align-self-center">
                         <div className="mb-1 form-group">
                           <input
-                            className="form-control form-control-sm font-sm"
+                            className="number-input form-control form-control-sm font-sm"
                             type="text"
                             disabled
                             value={total_TTC}
