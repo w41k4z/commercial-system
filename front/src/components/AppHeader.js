@@ -22,6 +22,9 @@ const AppHeader = () => {
   const dispatch = useDispatch()
   const sidebarShow = useSelector((state) => state.sidebarShow)
 
+  let acc = localStorage.getItem('account')
+  acc = JSON.parse(acc)
+
   return (
     <CHeader position="sticky" className="mb-4">
       <CContainer fluid>
@@ -35,7 +38,11 @@ const AppHeader = () => {
           <CIcon icon={logo} height={48} alt="Logo" />
         </CHeaderBrand>
         <CHeaderNav className="d-none d-md-flex me-auto"></CHeaderNav>
-        <CHeaderNav></CHeaderNav>
+        <CHeaderNav>
+          <CNavItem>
+            <CNavLink>{acc.fullname + ' from ' + acc.departmentName}</CNavLink>
+          </CNavItem>
+        </CHeaderNav>
         <CHeaderNav className="ms-3">
           <AppHeaderDropdown />
         </CHeaderNav>

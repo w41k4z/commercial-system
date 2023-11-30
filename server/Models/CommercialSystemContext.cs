@@ -33,6 +33,7 @@ namespace server.Models
         public virtual DbSet<PurchaseOrder> PurchaseOrders { get; set; } = null!;
         public virtual DbSet<PurchaseOrderDetail> PurchaseOrderDetails { get; set; } = null!;
         public virtual DbSet<Supplier> Suppliers { get; set; } = null!;
+        public virtual DbSet<VAccount> VAccounts { get; set; } = null!;
         public virtual DbSet<VArticleEmail> VArticleEmails { get; set; } = null!;
         public virtual DbSet<VBesoin> VBesoins { get; set; } = null!;
         public virtual DbSet<VBesoinAAfficher> VBesoinAAffichers { get; set; } = null!;
@@ -65,13 +66,19 @@ namespace server.Models
                     .HasMaxLength(100)
                     .HasColumnName("email");
 
+                entity.Property(e => e.Fullname)
+                    .HasMaxLength(100)
+                    .HasColumnName("fullname");
+
                 entity.Property(e => e.IdDepartment).HasColumnName("id_department");
 
                 entity.Property(e => e.Password)
                     .HasColumnType("character varying")
                     .HasColumnName("password");
 
-                entity.Property(e => e.Profil).HasColumnName("profil");
+                entity.Property(e => e.Profil)
+                    .HasMaxLength(100)
+                    .HasColumnName("profil");
 
                 entity.HasOne(d => d.IdDepartmentNavigation)
                     .WithMany(p => p.Accounts)
@@ -476,6 +483,37 @@ namespace server.Models
                 entity.Property(e => e.PhoneNumber)
                     .HasColumnType("character varying")
                     .HasColumnName("phone_number");
+            });
+
+            modelBuilder.Entity<VAccount>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("v_account");
+
+                entity.Property(e => e.DepartmentName)
+                    .HasMaxLength(100)
+                    .HasColumnName("department_name");
+
+                entity.Property(e => e.Email)
+                    .HasMaxLength(100)
+                    .HasColumnName("email");
+
+                entity.Property(e => e.Fullname)
+                    .HasMaxLength(100)
+                    .HasColumnName("fullname");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.IdDepartment).HasColumnName("id_department");
+
+                entity.Property(e => e.Password)
+                    .HasColumnType("character varying")
+                    .HasColumnName("password");
+
+                entity.Property(e => e.Profil)
+                    .HasMaxLength(100)
+                    .HasColumnName("profil");
             });
 
             modelBuilder.Entity<VArticleEmail>(entity =>

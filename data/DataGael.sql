@@ -256,7 +256,27 @@ select ng.numero as need_numero,a.name as article_name,pd.quantity,pd.unit_price
 create or replace view v_article_email as
 select ps.id,ng.quantity,a.name,a.unit from proforma_send ps join proforma_send_need_group psng on ps.id=psng.id_proforma_send join need_group ng on ng.id=psng.id_need_group join article a on a.id=ng.id_article;
 
+INSERT INTO department (id,name) VALUES
+    (1,'Sales'),
+    (2,'Marketing'),
+    (3,'Finance');
 
+INSERT INTO account (fullname, email, password, profil, id_department) VALUES
+    ('John Doe', 'john@example.com', 'pass123', 'admin', 1),
+    ('Jane Smith', 'jane@example.com', 'pass456', 'manager', 1),
+    ('Alice Johnson', 'alice@example.com', 'pass789', 'employee', 1),
+
+    ('Robert Brown', 'robert@example.com', 'pass123', 'admin', 2),
+    ('Emily Davis', 'emily@example.com', 'pass456', 'manager', 2),
+    ('Michael Clark', 'michael@example.com', 'pass789', 'employee', 2),
+
+    ('Sarah Wilson', 'sarah@example.com', 'pass123', 'admin', 3),
+    ('David Garcia', 'david@example.com', 'pass456', 'manager', 3),
+    ('Olivia Martinez', 'olivia@example.com', 'pass789', 'employee', 3);
+
+
+create or replace view v_account as
+select a.*,d.name as department_name from account a join department d on d.id=a.id_department;
 
 
 vbue urgy bohg kemq
