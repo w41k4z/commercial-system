@@ -1,5 +1,6 @@
 import React from 'react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import Axios from '../../http-client-side/Axios'
 import {
   CButton,
   CCard,
@@ -20,6 +21,61 @@ import {
 } from '@coreui/react'
 
 const EnAttenteProforma = () => {
+  const [proformaattentes, setProformaAttentes] = useState([])
+  const [proformas, setProformas] = useState([])
+
+  useEffect(() => {
+    fetchListProformaAttentes()
+  }, [])
+
+  const fetchListProformaAttentes = async () => {
+    await Axios.get('/api/enattenteproforma')
+      .then((res) => {
+        setProformaAttentes(res.data.proformaEnAttentes)
+      })
+      .catch((error) => {
+        alert(error)
+      })
+  }
+
+  useEffect(() => {
+    fetchListeProformas()
+  }, [])
+
+  const fetchListeProformas = async () => {
+    await Axios.get('/api/voirproforma')
+      .then((res) => {
+        setProformas(res.data.proformas)
+      })
+      .catch((error) => {
+        alert(error)
+      })
+  }
+
+  const [tableRows, setTableRows] = useState([])
+
+  const seeProforma = async (event) => {
+    event.preventDefault()
+    let id = document.getElementById('id_proforma').value
+    await Axios.post('/api/voirproforma?id=' + id)
+      .then((res) => {
+        let proforma = res.data.proforma
+        document.getElementById('numero').innerText = proforma.numero
+        document.getElementById('supplier').innerText = proforma.supplier
+        document.getElementById('numero_envoi').innerText = proforma.numeroSend
+        document.getElementById('date_envoi').innerText = proforma.dateSend
+        document.getElementById('date_reception').innerText = proforma.dateReceived
+        let details = res.data.details
+        setTableRows(details)
+        document.getElementById('total_ht').innerText = proforma.totalHt
+        document.getElementById('total_tva').innerText = proforma.totalTva
+        document.getElementById('total_ttc').innerText = proforma.totalTtc
+      })
+      .catch((error) => {
+        alert(error)
+      })
+  }
+
   return (
     <CRow>
       <CCol xs={12}>
@@ -42,32 +98,46 @@ const EnAttenteProforma = () => {
                 </CTableRow>
               </CTableHead>
               <CTableBody>
-                <CTableRow>
-                  <CTableDataCell>EV0001</CTableDataCell>
-                  <CTableDataCell>2023-11-10</CTableDataCell>
-                  <CTableDataCell>Shoprite</CTableDataCell>
-                  <CTableDataCell>
-                    <CForm action="/#/proforma/nouveauproforma">
-                      <CButton color="primary" size="sm" type="submit">
-                        Repondre
-                      </CButton>
-                    </CForm>
-                  </CTableDataCell>
-                  <CTableDataCell>BE0001</CTableDataCell>
-                  <CTableDataCell>Gel 500mL</CTableDataCell>
-                  <CTableDataCell>10</CTableDataCell>
-                  <CTableDataCell>2023-11-20</CTableDataCell>
-                </CTableRow>
-                <CTableRow>
-                  <CTableDataCell></CTableDataCell>
-                  <CTableDataCell></CTableDataCell>
-                  <CTableDataCell></CTableDataCell>
-                  <CTableDataCell></CTableDataCell>
-                  <CTableDataCell>BE0002</CTableDataCell>
-                  <CTableDataCell>Polo L</CTableDataCell>
-                  <CTableDataCell>20</CTableDataCell>
-                  <CTableDataCell>2023-11-30</CTableDataCell>
-                </CTableRow>
+                {proformaattentes.map((l, index) => {
+                  return (
+                    <>
+                      <CTableRow key={index}>
+                        <CTableDataCell>{l.vProformaSend.numero}</CTableDataCell>
+                        <CTableDataCell>{l.vProformaSend.dateSend}</CTableDataCell>
+                        <CTableDataCell>{l.vProformaSend.name}</CTableDataCell>
+                        <CTableDataCell>
+                          <CForm
+                            action={
+                              '/#/proforma/nouveauproforma?id_proforma_send=' + l.vProformaSend.id
+                            }
+                          >
+                            <CButton color="primary" size="sm" type="submit">
+                              Repondre
+                            </CButton>
+                          </CForm>
+                        </CTableDataCell>
+                        <CTableDataCell>{l.vProformaSendNeedGroups[0].numero}</CTableDataCell>
+                        <CTableDataCell>{l.vProformaSendNeedGroups[0].articleName}</CTableDataCell>
+                        <CTableDataCell>{l.vProformaSendNeedGroups[0].quantity}</CTableDataCell>
+                        <CTableDataCell>
+                          {l.vProformaSendNeedGroups[0].finalDateNeed}
+                        </CTableDataCell>
+                      </CTableRow>
+                      {l.vProformaSendNeedGroups.slice(1).map((detail, detailIndex) => (
+                        <CTableRow key={detailIndex}>
+                          <CTableDataCell></CTableDataCell>
+                          <CTableDataCell></CTableDataCell>
+                          <CTableDataCell></CTableDataCell>
+                          <CTableDataCell></CTableDataCell>
+                          <CTableDataCell>{detail.numero}</CTableDataCell>
+                          <CTableDataCell>{detail.articleName}</CTableDataCell>
+                          <CTableDataCell>{detail.quantity}</CTableDataCell>
+                          <CTableDataCell>{detail.finalDateNeed}</CTableDataCell>
+                        </CTableRow>
+                      ))}
+                    </>
+                  )
+                })}
               </CTableBody>
             </CTable>
           </CCardBody>
@@ -79,15 +149,20 @@ const EnAttenteProforma = () => {
             <strong>Les recus</strong> <small></small>
           </CCardHeader>
           <CCardBody>
-            <CForm>
+            <CForm onSubmit={seeProforma}>
               <CRow className="mb-3">
                 <CFormLabel htmlFor="datedebesoin" className="col-sm-2 col-form-label">
                   Proforma numero
                 </CFormLabel>
                 <CCol sm={9}>
-                  <CFormSelect id="inputState">
-                    <option>PRF0001</option>
-                    <option>PRF0001</option>
+                  <CFormSelect id="id_proforma">
+                    {proformas.map((l, index) => {
+                      return (
+                        <>
+                          <option value={l.id}>{l.numero}</option>
+                        </>
+                      )
+                    })}
                   </CFormSelect>
                 </CCol>
                 <CCol sm={1}>
@@ -101,23 +176,23 @@ const EnAttenteProforma = () => {
                   <CTableBody>
                     <CTableRow>
                       <CTableHeaderCell>Proforma numero</CTableHeaderCell>
-                      <CTableDataCell>PR0001</CTableDataCell>
+                      <CTableDataCell id="numero"></CTableDataCell>
+                    </CTableRow>
+                    <CTableRow>
+                      <CTableHeaderCell>Fournisseur</CTableHeaderCell>
+                      <CTableDataCell id="supplier"></CTableDataCell>
                     </CTableRow>
                     <CTableRow>
                       <CTableHeaderCell>Date d envoi</CTableHeaderCell>
-                      <CTableDataCell>2023-11-19</CTableDataCell>
+                      <CTableDataCell id="date_envoi"></CTableDataCell>
                     </CTableRow>
                     <CTableRow>
                       <CTableHeaderCell>Numero d envoi</CTableHeaderCell>
-                      <CTableDataCell>EV0001</CTableDataCell>
-                    </CTableRow>
-                    <CTableRow>
-                      <CTableHeaderCell>Proforma numero</CTableHeaderCell>
-                      <CTableDataCell>PR0001</CTableDataCell>
+                      <CTableDataCell id="numero_envoi"></CTableDataCell>
                     </CTableRow>
                     <CTableRow>
                       <CTableHeaderCell>Date de reception</CTableHeaderCell>
-                      <CTableDataCell>2023-11-20</CTableDataCell>
+                      <CTableDataCell id="date_reception"></CTableDataCell>
                     </CTableRow>
                   </CTableBody>
                 </CTable>
@@ -135,29 +210,33 @@ const EnAttenteProforma = () => {
                 </CTableRow>
               </CTableHead>
               <CTableBody>
-                <CTableRow>
-                  <CTableDataCell>EV0001</CTableDataCell>
-                  <CTableDataCell>Gel 500mL</CTableDataCell>
-                  <CTableDataCell>10</CTableDataCell>
-                  <CTableDataCell>1000</CTableDataCell>
-                  <CTableDataCell>20</CTableDataCell>
-                  <CTableDataCell>12312</CTableDataCell>
-                </CTableRow>
-                <CTableRow>
-                  <CTableDataCell>EV0001</CTableDataCell>
-                  <CTableDataCell>Gel 500mL</CTableDataCell>
-                  <CTableDataCell>10</CTableDataCell>
-                  <CTableDataCell>1000</CTableDataCell>
-                  <CTableDataCell>20</CTableDataCell>
-                  <CTableDataCell>12312</CTableDataCell>
-                </CTableRow>
+                {tableRows.map((l, index) => {
+                  return (
+                    <CTableRow key={index}>
+                      <CTableDataCell>{l.numero}</CTableDataCell>
+                      <CTableDataCell>{l.articleName}</CTableDataCell>
+                      <CTableDataCell>{l.quantity}</CTableDataCell>
+                      <CTableDataCell>{l.unitPrice}</CTableDataCell>
+                      <CTableDataCell>{l.tva}</CTableDataCell>
+                      <CTableDataCell>{l.totalHt}</CTableDataCell>
+                    </CTableRow>
+                  )
+                })}
                 <CTableRow>
                   <CTableDataCell></CTableDataCell>
                   <CTableDataCell></CTableDataCell>
                   <CTableDataCell></CTableDataCell>
                   <CTableDataCell></CTableDataCell>
                   <CTableHeaderCell>Total HT</CTableHeaderCell>
-                  <CTableDataCell>10000</CTableDataCell>
+                  <CTableDataCell id="total_ht"></CTableDataCell>
+                </CTableRow>
+                <CTableRow>
+                  <CTableDataCell></CTableDataCell>
+                  <CTableDataCell></CTableDataCell>
+                  <CTableDataCell></CTableDataCell>
+                  <CTableDataCell></CTableDataCell>
+                  <CTableHeaderCell>Total TVA</CTableHeaderCell>
+                  <CTableDataCell id="total_tva"></CTableDataCell>
                 </CTableRow>
                 <CTableRow>
                   <CTableDataCell></CTableDataCell>
@@ -165,7 +244,7 @@ const EnAttenteProforma = () => {
                   <CTableDataCell></CTableDataCell>
                   <CTableDataCell></CTableDataCell>
                   <CTableHeaderCell>Total TTC</CTableHeaderCell>
-                  <CTableDataCell>10000</CTableDataCell>
+                  <CTableDataCell id="total_ttc"></CTableDataCell>
                 </CTableRow>
               </CTableBody>
             </CTable>

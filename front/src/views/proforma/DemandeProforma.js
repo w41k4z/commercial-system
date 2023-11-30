@@ -21,16 +21,21 @@ import {
 
 const DemandeProforma = () => {
   const [listebesoin, setListebesoin] = useState([])
+  const [groupebesoin, setGroupebesoin] = useState([])
+  const [fournisseur, setFournisseur] = useState([])
+  const [besoinproformes, setBesoinProformers] = useState([])
+
   useEffect(() => {
     fetchListebesoin()
   }, [])
 
-  // Method
   const fetchListebesoin = async () => {
     await Axios.get('/api/demandeproforma')
       .then((res) => {
-        console.log(res.data)
-        setListebesoin(res.data)
+        setListebesoin(res.data.besoinAAfficher)
+        setGroupebesoin(res.data.groupNonProformers)
+        setFournisseur(res.data.fournisseurs)
+        setBesoinProformers(res.data.besoinProformers)
       })
       .catch((error) => {
         alert(error)
@@ -46,9 +51,21 @@ const DemandeProforma = () => {
         <CCol></CCol>
         <CCol sm={10}>
           <CFormLabel htmlFor="nomarticle">Numero</CFormLabel>
-          <CFormSelect id="inputState">
-            <option>BS0001</option>
-            <option>BS0002</option>
+          <CFormSelect id={'besoins' + index}>
+            {groupebesoin.map((l, index) => {
+              return (
+                <option key={index} value={l.id}>
+                  {l.numero}
+                </option>
+              )
+            })}
+            {besoinproformes.map((l, index) => {
+              return (
+                <option key={index} value={l.vGroupProformer.id}>
+                  {l.vGroupProformer.numero}
+                </option>
+              )
+            })}
           </CFormSelect>
         </CCol>
         <CCol>
@@ -60,10 +77,37 @@ const DemandeProforma = () => {
       </CRow>
     )
   }
-  const [rows, setRows] = useState([renderRow(1)])
+  const [rows, setRows] = useState([])
   const addnewline = () => {
     const newRow = renderRow(rows.length)
     setRows([...rows, newRow])
+  }
+  const submitform = async (event) => {
+    event.preventDefault()
+    let dateenvoie = document.getElementById('dateenvoi').value
+    let idfournisseur = document.getElementById('idfournisseur').value
+    let besoins = []
+    let i = 0
+    let b = document.getElementById('besoins' + i)
+
+    while (b != null) {
+      besoins.push(parseInt(b.value))
+      i++
+      b = document.getElementById('besoins' + i)
+    }
+    let go = {
+      dateenvoie: dateenvoie,
+      idfournisseur: idfournisseur,
+      besoins: besoins,
+    }
+    console.log(go)
+    await Axios.post('/api/demandeproforma', go)
+      .then((res) => {
+        alert(res.data)
+      })
+      .catch((error) => {
+        alert(error)
+      })
   }
   return (
     <CRow>
@@ -116,12 +160,16 @@ const DemandeProforma = () => {
                 </CTableRow>
               </CTableHead>
               <CTableBody>
-                <CTableRow>
-                  <CTableDataCell>BS0001</CTableDataCell>
-                  <CTableDataCell>Gel 500mL</CTableDataCell>
-                  <CTableDataCell>10</CTableDataCell>
-                  <CTableDataCell>2023-11-10</CTableDataCell>
-                </CTableRow>
+                {groupebesoin.map((l, index) => {
+                  return (
+                    <CTableRow key={index}>
+                      <CTableDataCell>{l.numero}</CTableDataCell>
+                      <CTableDataCell>{l.article}</CTableDataCell>
+                      <CTableDataCell>{l.quantity}</CTableDataCell>
+                      <CTableDataCell>{l.finalDateNeed}</CTableDataCell>
+                    </CTableRow>
+                  )
+                })}
               </CTableBody>
             </CTable>
           </CCardBody>
@@ -146,24 +194,32 @@ const DemandeProforma = () => {
                 </CTableRow>
               </CTableHead>
               <CTableBody>
-                <CTableRow>
-                  <CTableDataCell>BS0001</CTableDataCell>
-                  <CTableDataCell>Gel 500mL</CTableDataCell>
-                  <CTableDataCell>10</CTableDataCell>
-                  <CTableDataCell>2023-11-10</CTableDataCell>
-                  <CTableDataCell>Shoprite</CTableDataCell>
-                  <CTableDataCell>2023-11-01</CTableDataCell>
-                  <CTableDataCell>EVP0001</CTableDataCell>
-                </CTableRow>
-                <CTableRow>
-                  <CTableDataCell></CTableDataCell>
-                  <CTableDataCell></CTableDataCell>
-                  <CTableDataCell></CTableDataCell>
-                  <CTableDataCell></CTableDataCell>
-                  <CTableDataCell>Shoprite</CTableDataCell>
-                  <CTableDataCell>2023-11-01</CTableDataCell>
-                  <CTableDataCell>EVP0001</CTableDataCell>
-                </CTableRow>
+                {besoinproformes.map((l, index) => {
+                  return (
+                    <>
+                      <CTableRow key={index}>
+                        <CTableDataCell>{l.vGroupProformer.numero}</CTableDataCell>
+                        <CTableDataCell>{l.vGroupProformer.article}</CTableDataCell>
+                        <CTableDataCell>{l.vGroupProformer.quantity}</CTableDataCell>
+                        <CTableDataCell>{l.vGroupProformer.finalDateNeed}</CTableDataCell>
+                        <CTableDataCell>{l.vGroupProformerDetails[0].supplier}</CTableDataCell>
+                        <CTableDataCell>{l.vGroupProformerDetails[0].dateSend}</CTableDataCell>
+                        <CTableDataCell>{l.vGroupProformerDetails[0].numero}</CTableDataCell>
+                      </CTableRow>
+                      {l.vGroupProformerDetails.slice(1).map((detail, detailIndex) => (
+                        <CTableRow key={detailIndex}>
+                          <CTableDataCell></CTableDataCell>
+                          <CTableDataCell></CTableDataCell>
+                          <CTableDataCell></CTableDataCell>
+                          <CTableDataCell></CTableDataCell>
+                          <CTableDataCell>{detail.supplier}</CTableDataCell>
+                          <CTableDataCell>{detail.dateSend}</CTableDataCell>
+                          <CTableDataCell>{detail.numero}</CTableDataCell>
+                        </CTableRow>
+                      ))}
+                    </>
+                  )
+                })}
               </CTableBody>
             </CTable>
           </CCardBody>
@@ -175,13 +231,13 @@ const DemandeProforma = () => {
             <strong>Nouvelle demade de proforma</strong> <small></small>
           </CCardHeader>
           <CCardBody>
-            <CForm>
+            <CForm onSubmit={submitform}>
               <CRow className="mb-3">
-                <CFormLabel htmlFor="datedecreation" className="col-sm-2 col-form-label">
+                <CFormLabel htmlFor="dateenvoin" className="col-sm-2 col-form-label">
                   Date d envoi
                 </CFormLabel>
                 <CCol sm={10}>
-                  <CFormInput type="date" id="datedecreation" />
+                  <CFormInput type="date" id="dateenvoi" />
                 </CCol>
               </CRow>
               <CRow className="mb-3">
@@ -189,9 +245,14 @@ const DemandeProforma = () => {
                   Fournisseur
                 </CFormLabel>
                 <CCol sm={10}>
-                  <CFormSelect id="inputState">
-                    <option>Shoprite</option>
-                    <option>Jumbo</option>
+                  <CFormSelect id="idfournisseur">
+                    {fournisseur.map((l, index) => {
+                      return (
+                        <option key={index} value={l.id}>
+                          {l.name}
+                        </option>
+                      )
+                    })}
                   </CFormSelect>
                 </CCol>
               </CRow>
