@@ -280,3 +280,82 @@ select a.*,d.name as department_name from account a join department d on d.id=a.
 
 
 vbue urgy bohg kemq
+
+
+create table magasin(
+	id serial primary key,
+	name varchar(100)
+);
+
+insert into magasin(name) values('Magasin1');
+insert into magasin(name) values('Magasin2');
+insert into magasin(name) values('Magasin3');
+
+drop table bon_entree cascade;
+
+create table bon_entree(
+	id serial primary key,
+	id_magasin integer,
+	date_entree date,
+	id_supplier integer,
+	id_remis_par integer,
+	id_recu_par integer,
+	foreign key (id_magasin) references magasin(id),
+	foreign key (id_remis_par) references account(id),
+	foreign key (id_recu_par) references account(id),
+	foreign key (id_supplier) references supplier(id)
+);
+
+drop table bon_entree_details;
+create table bon_entree_details(
+	id serial primary key,
+	id_bon_entree integer,
+	id_article integer,
+	quantite double precision,
+	observation varchar(200),
+	foreign key (id_bon_entree) references bon_entree(id),
+	foreign key (id_article) references article(id)
+);
+
+
+create or replace view v_bon_entree as 
+select be.*,m.name as magasin_name,s.name as supplier_name,a1.fullname as remis_par_name,a2.fullname as recu_par_name from bon_entree be join magasin m on m.id=be.id_magasin join supplier s on s.id=be.id_supplier join account a1 on a1.id=be.id_remis_par join account a2 on a2.id=be.id_recu_par;
+
+create  or replace view v_bon_entree_details as 
+select bed.*,a.name as article_name from bon_entree_details bed join article a on a.id=bed.id_article;
+
+
+
+create table bon_sortie(
+	id serial primary key,
+	date_sortie date,
+	id_demande integer,
+	id_remis integer,
+	id_magasin integer,
+	foreign key (id_demande) references account(id),
+	foreign key (id_remis) references account(id),
+	foreign key (id_magasin) references magasin(id)
+);
+
+drop table bon_sortie_details cascade;
+
+create table bon_sortie_details(
+	id serial primary key,
+	id_bon_sortie integer,
+	id_article integer,
+	quantite_demande double precision,
+	quantite_livre double precision,
+	prix_unitaire double precision,
+	total double precision,
+	foreign key (id_bon_sortie) references bon_sortie(id),
+	foreign key (id_article) references article(id)
+);
+
+
+create or replace view v_bon_sortie as 
+select bs.*,a1.fullname as demande_name,a2.fullname as remis_name,m.name as magasin_name from bon_sortie bs join account a1 on a1.id=bs.id_demande join account a2 on a2.id=bs.id_remis join magasin m on m.id=bs.id_magasin;
+
+
+create or replace view v_bon_sortie_detials as 
+select bsd.*,a.name as article_name from bon_sortie_details bsd join article a on a.id=bsd.id_article;
+

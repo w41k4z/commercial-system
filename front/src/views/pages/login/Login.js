@@ -18,8 +18,8 @@ import CIcon from '@coreui/icons-react'
 import { cilLockLocked, cilUser } from '@coreui/icons'
 
 const Login = () => {
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
+  const [username, setUsername] = useState('john@example.com')
+  const [password, setPassword] = useState('pass123')
   const navigate = useNavigate()
 
   async function login() {

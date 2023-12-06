@@ -8,6 +8,8 @@ const DemandeProforma = React.lazy(() => import('./views/proforma/DemandeProform
 const EnAttenteProforma = React.lazy(() => import('./views/proforma/EnAttenteProforma'))
 const NouveauProforma = React.lazy(() => import('./views/proforma/NouveauProforma'))
 const MoinsDisant = React.lazy(() => import('./views/proforma/MoinsDisant'))
+const BonEntree = React.lazy(() => import('./views/bonmagasin/BonEntree'))
+const BonSortie = React.lazy(() => import('./views/bonmagasin/BonSortie'))
 
 const routes = [
   { path: '/crud/article', name: 'Article', element: Article },
@@ -18,6 +20,8 @@ const routes = [
   { path: '/proforma/nouveauproforma', name: 'Nouveau Proforma', element: NouveauProforma },
   { path: '/proforma/moinsdisant', name: 'Moins Disant', element: MoinsDisant },
   { path: '/empty', name: 'Empty', element: Empty },
+  { path: '/bonmagasin/entree', name: 'Bon d entree', element: BonEntree },
+  { path: '/bonmagasin/sortie', name: 'Bon de sortie', element: BonSortie },
 ]
 
 export default routes
