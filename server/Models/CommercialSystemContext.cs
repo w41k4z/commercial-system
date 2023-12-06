@@ -19,9 +19,14 @@ namespace server.Models
         public virtual DbSet<Account> Accounts { get; set; } = null!;
         public virtual DbSet<Article> Articles { get; set; } = null!;
         public virtual DbSet<ArticleSupplier> ArticleSuppliers { get; set; } = null!;
+        public virtual DbSet<BonEntree> BonEntrees { get; set; } = null!;
+        public virtual DbSet<BonEntreeDetail> BonEntreeDetails { get; set; } = null!;
+        public virtual DbSet<BonSortie> BonSorties { get; set; } = null!;
+        public virtual DbSet<BonSortieDetail> BonSortieDetails { get; set; } = null!;
         public virtual DbSet<Company> Companies { get; set; } = null!;
         public virtual DbSet<Department> Departments { get; set; } = null!;
         public virtual DbSet<DepartmentNeed> DepartmentNeeds { get; set; } = null!;
+        public virtual DbSet<Magasin> Magasins { get; set; } = null!;
         public virtual DbSet<MoinsDisant> MoinsDisants { get; set; } = null!;
         public virtual DbSet<NeedDetail> NeedDetails { get; set; } = null!;
         public virtual DbSet<NeedGroup> NeedGroups { get; set; } = null!;
@@ -38,6 +43,10 @@ namespace server.Models
         public virtual DbSet<VBesoin> VBesoins { get; set; } = null!;
         public virtual DbSet<VBesoinAAfficher> VBesoinAAffichers { get; set; } = null!;
         public virtual DbSet<VBesoinAGrouper> VBesoinAGroupers { get; set; } = null!;
+        public virtual DbSet<VBonEntree> VBonEntrees { get; set; } = null!;
+        public virtual DbSet<VBonEntreeDetail> VBonEntreeDetails { get; set; } = null!;
+        public virtual DbSet<VBonSortie> VBonSorties { get; set; } = null!;
+        public virtual DbSet<VBonSortieDetial> VBonSortieDetials { get; set; } = null!;
         public virtual DbSet<VGroupNonProformer> VGroupNonProformers { get; set; } = null!;
         public virtual DbSet<VGroupProformer> VGroupProformers { get; set; } = null!;
         public virtual DbSet<VGroupProformerDetail> VGroupProformerDetails { get; set; } = null!;
@@ -124,6 +133,129 @@ namespace server.Models
                     .HasConstraintName("fk_article_supplier_supplier");
             });
 
+            modelBuilder.Entity<BonEntree>(entity =>
+            {
+                entity.ToTable("bon_entree");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.DateEntree).HasColumnName("date_entree");
+
+                entity.Property(e => e.IdMagasin).HasColumnName("id_magasin");
+
+                entity.Property(e => e.IdRecuPar).HasColumnName("id_recu_par");
+
+                entity.Property(e => e.IdRemisPar).HasColumnName("id_remis_par");
+
+                entity.Property(e => e.IdSupplier).HasColumnName("id_supplier");
+
+                entity.HasOne(d => d.IdMagasinNavigation)
+                    .WithMany(p => p.BonEntrees)
+                    .HasForeignKey(d => d.IdMagasin)
+                    .HasConstraintName("bon_entree_id_magasin_fkey");
+
+                entity.HasOne(d => d.IdRecuParNavigation)
+                    .WithMany(p => p.BonEntreeIdRecuParNavigations)
+                    .HasForeignKey(d => d.IdRecuPar)
+                    .HasConstraintName("bon_entree_id_recu_par_fkey");
+
+                entity.HasOne(d => d.IdRemisParNavigation)
+                    .WithMany(p => p.BonEntreeIdRemisParNavigations)
+                    .HasForeignKey(d => d.IdRemisPar)
+                    .HasConstraintName("bon_entree_id_remis_par_fkey");
+
+                entity.HasOne(d => d.IdSupplierNavigation)
+                    .WithMany(p => p.BonEntrees)
+                    .HasForeignKey(d => d.IdSupplier)
+                    .HasConstraintName("bon_entree_id_supplier_fkey");
+            });
+
+            modelBuilder.Entity<BonEntreeDetail>(entity =>
+            {
+                entity.ToTable("bon_entree_details");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.IdArticle).HasColumnName("id_article");
+
+                entity.Property(e => e.IdBonEntree).HasColumnName("id_bon_entree");
+
+                entity.Property(e => e.Observation)
+                    .HasMaxLength(200)
+                    .HasColumnName("observation");
+
+                entity.Property(e => e.Quantite).HasColumnName("quantite");
+
+                entity.HasOne(d => d.IdArticleNavigation)
+                    .WithMany(p => p.BonEntreeDetails)
+                    .HasForeignKey(d => d.IdArticle)
+                    .HasConstraintName("bon_entree_details_id_article_fkey");
+
+                entity.HasOne(d => d.IdBonEntreeNavigation)
+                    .WithMany(p => p.BonEntreeDetails)
+                    .HasForeignKey(d => d.IdBonEntree)
+                    .HasConstraintName("bon_entree_details_id_bon_entree_fkey");
+            });
+
+            modelBuilder.Entity<BonSortie>(entity =>
+            {
+                entity.ToTable("bon_sortie");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.DateSortie).HasColumnName("date_sortie");
+
+                entity.Property(e => e.IdDemande).HasColumnName("id_demande");
+
+                entity.Property(e => e.IdMagasin).HasColumnName("id_magasin");
+
+                entity.Property(e => e.IdRemis).HasColumnName("id_remis");
+
+                entity.HasOne(d => d.IdDemandeNavigation)
+                    .WithMany(p => p.BonSortieIdDemandeNavigations)
+                    .HasForeignKey(d => d.IdDemande)
+                    .HasConstraintName("bon_sortie_id_demande_fkey");
+
+                entity.HasOne(d => d.IdMagasinNavigation)
+                    .WithMany(p => p.BonSorties)
+                    .HasForeignKey(d => d.IdMagasin)
+                    .HasConstraintName("bon_sortie_id_magasin_fkey");
+
+                entity.HasOne(d => d.IdRemisNavigation)
+                    .WithMany(p => p.BonSortieIdRemisNavigations)
+                    .HasForeignKey(d => d.IdRemis)
+                    .HasConstraintName("bon_sortie_id_remis_fkey");
+            });
+
+            modelBuilder.Entity<BonSortieDetail>(entity =>
+            {
+                entity.ToTable("bon_sortie_details");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.IdArticle).HasColumnName("id_article");
+
+                entity.Property(e => e.IdBonSortie).HasColumnName("id_bon_sortie");
+
+                entity.Property(e => e.PrixUnitaire).HasColumnName("prix_unitaire");
+
+                entity.Property(e => e.QuantiteDemande).HasColumnName("quantite_demande");
+
+                entity.Property(e => e.QuantiteLivre).HasColumnName("quantite_livre");
+
+                entity.Property(e => e.Total).HasColumnName("total");
+
+                entity.HasOne(d => d.IdArticleNavigation)
+                    .WithMany(p => p.BonSortieDetails)
+                    .HasForeignKey(d => d.IdArticle)
+                    .HasConstraintName("bon_sortie_details_id_article_fkey");
+
+                entity.HasOne(d => d.IdBonSortieNavigation)
+                    .WithMany(p => p.BonSortieDetails)
+                    .HasForeignKey(d => d.IdBonSortie)
+                    .HasConstraintName("bon_sortie_details_id_bon_sortie_fkey");
+            });
+
             modelBuilder.Entity<Company>(entity =>
             {
                 entity.ToTable("company");
@@ -174,6 +306,17 @@ namespace server.Models
                     .WithMany(p => p.DepartmentNeeds)
                     .HasForeignKey(d => d.IdDepartment)
                     .HasConstraintName("fk_department_needs_department");
+            });
+
+            modelBuilder.Entity<Magasin>(entity =>
+            {
+                entity.ToTable("magasin");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.Name)
+                    .HasMaxLength(100)
+                    .HasColumnName("name");
             });
 
             modelBuilder.Entity<MoinsDisant>(entity =>
@@ -620,6 +763,118 @@ namespace server.Models
                 entity.Property(e => e.Quantity).HasColumnName("quantity");
 
                 entity.Property(e => e.Validation).HasColumnName("validation");
+            });
+
+            modelBuilder.Entity<VBonEntree>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("v_bon_entree");
+
+                entity.Property(e => e.DateEntree).HasColumnName("date_entree");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.IdMagasin).HasColumnName("id_magasin");
+
+                entity.Property(e => e.IdRecuPar).HasColumnName("id_recu_par");
+
+                entity.Property(e => e.IdRemisPar).HasColumnName("id_remis_par");
+
+                entity.Property(e => e.IdSupplier).HasColumnName("id_supplier");
+
+                entity.Property(e => e.MagasinName)
+                    .HasMaxLength(100)
+                    .HasColumnName("magasin_name");
+
+                entity.Property(e => e.RecuParName)
+                    .HasMaxLength(100)
+                    .HasColumnName("recu_par_name");
+
+                entity.Property(e => e.RemisParName)
+                    .HasMaxLength(100)
+                    .HasColumnName("remis_par_name");
+
+                entity.Property(e => e.SupplierName)
+                    .HasMaxLength(100)
+                    .HasColumnName("supplier_name");
+            });
+
+            modelBuilder.Entity<VBonEntreeDetail>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("v_bon_entree_details");
+
+                entity.Property(e => e.ArticleName)
+                    .HasMaxLength(100)
+                    .HasColumnName("article_name");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.IdArticle).HasColumnName("id_article");
+
+                entity.Property(e => e.IdBonEntree).HasColumnName("id_bon_entree");
+
+                entity.Property(e => e.Observation)
+                    .HasMaxLength(200)
+                    .HasColumnName("observation");
+
+                entity.Property(e => e.Quantite).HasColumnName("quantite");
+            });
+
+            modelBuilder.Entity<VBonSortie>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("v_bon_sortie");
+
+                entity.Property(e => e.DateSortie).HasColumnName("date_sortie");
+
+                entity.Property(e => e.DemandeName)
+                    .HasMaxLength(100)
+                    .HasColumnName("demande_name");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.IdDemande).HasColumnName("id_demande");
+
+                entity.Property(e => e.IdMagasin).HasColumnName("id_magasin");
+
+                entity.Property(e => e.IdRemis).HasColumnName("id_remis");
+
+                entity.Property(e => e.MagasinName)
+                    .HasMaxLength(100)
+                    .HasColumnName("magasin_name");
+
+                entity.Property(e => e.RemisName)
+                    .HasMaxLength(100)
+                    .HasColumnName("remis_name");
+            });
+
+            modelBuilder.Entity<VBonSortieDetial>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("v_bon_sortie_detials");
+
+                entity.Property(e => e.ArticleName)
+                    .HasMaxLength(100)
+                    .HasColumnName("article_name");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.IdArticle).HasColumnName("id_article");
+
+                entity.Property(e => e.IdBonSortie).HasColumnName("id_bon_sortie");
+
+                entity.Property(e => e.PrixUnitaire).HasColumnName("prix_unitaire");
+
+                entity.Property(e => e.QuantiteDemande).HasColumnName("quantite_demande");
+
+                entity.Property(e => e.QuantiteLivre).HasColumnName("quantite_livre");
+
+                entity.Property(e => e.Total).HasColumnName("total");
             });
 
             modelBuilder.Entity<VGroupNonProformer>(entity =>

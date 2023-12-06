@@ -9,6 +9,8 @@ const DemandeProforma = React.lazy(() => import('./views/proforma/DemandeProform
 const EnAttenteProforma = React.lazy(() => import('./views/proforma/EnAttenteProforma'))
 const NouveauProforma = React.lazy(() => import('./views/proforma/NouveauProforma'))
 const MoinsDisant = React.lazy(() => import('./views/proforma/MoinsDisant'))
+const BonEntree = React.lazy(() => import('./views/bonmagasin/BonEntree'))
+const BonSortie = React.lazy(() => import('./views/bonmagasin/BonSortie'))
 
 const PurchaseOrder = React.lazy(() => import('./views/purchase_order/new/New'))
 const PurchaseOrderValidation = React.lazy(() => import('./views/purchase_order/status/Validation'))
@@ -37,6 +39,8 @@ const routes = [
   },
 
   { path: '/empty', name: 'Empty', element: Empty },
+  { path: '/bonmagasin/entree', name: 'Bon d entree', element: BonEntree },
+  { path: '/bonmagasin/sortie', name: 'Bon de sortie', element: BonSortie },
 ]
 
 export default routes
