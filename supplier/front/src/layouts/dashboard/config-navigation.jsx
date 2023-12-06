@@ -24,7 +24,7 @@ const navConfig = [
   },
   {
     title: 'proforma',
-    path: '/blog',
+    path: '/proforma',
     icon: icon('ic_blog'),
   },
   {

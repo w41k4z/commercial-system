@@ -1,8 +1,11 @@
 const express = require('express');
+const cors = require('cors');
 const multer = require('multer');
 const nodemailer = require('nodemailer');
 
 const server = express();
+
+server.use(cors());
 
 const upload = multer({ storage: multer.memoryStorage() });
 
