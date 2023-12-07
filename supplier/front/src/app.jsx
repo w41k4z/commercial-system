@@ -1,5 +1,6 @@
 /* eslint-disable perfectionist/sort-imports */
 import 'src/global.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 import { useScrollToTop } from 'src/hooks/use-scroll-to-top';
 

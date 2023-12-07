@@ -2,7 +2,6 @@ import axios from 'axios';
 import html2pdf from 'html2pdf.js';
 import {Modal} from 'react-bootstrap';
 import { useState, useEffect } from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
 
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';

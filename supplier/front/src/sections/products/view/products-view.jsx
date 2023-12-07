@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { Modal } from 'react-bootstrap';
 import { useState, useEffect } from 'react';
 
 import Card from '@mui/material/Card';
@@ -43,6 +44,14 @@ export default function UserPage() {
       setProducts(data.documents);
     })
   }, [])
+
+  const [newArticle, setNewArticle] = useState({id: '', designation: '', brand: '', description: '', unitPrice: 0, remaining: 0})
+
+  const [modalVisibility, setModalVisibility] = useState(false);
+
+  const hideModal = () => {
+    setModalVisibility(false);
+  }
 
   const handleSort = (event, id) => {
     const isAsc = orderBy === id && order === 'asc';
@@ -106,9 +115,90 @@ export default function UserPage() {
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
         <Typography variant="h4">Articles</Typography>
 
-        <Button variant="contained" color="inherit" startIcon={<Iconify icon="eva:plus-fill" />}>
+        <Button variant="contained" color="inherit" startIcon={<Iconify icon="eva:plus-fill" />} onClick={() => setModalVisibility(true)}>
           New Article
         </Button>
+        {modalVisibility && (
+          <Modal show onHide={hideModal} centered>
+            <Modal.Header closeButton>
+              <Modal.Title>Add client</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <div className="mb-3">
+                {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
+                <label htmlFor='article'>id</label>
+                <input type='text' className='form-control' defaultValue={newArticle.id} onChange={e => setNewArticle({...newArticle, id: e.target.value})} />
+              </div>
+              <div className="mb-3">
+                {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
+                <label htmlFor='article'>
+                  Designation
+                </label>
+                  <input type='text' className='form-control' defaultValue={newArticle.designation} onChange={e => setNewArticle({...newArticle, designation: e.target.value})} />
+              </div>
+              <div className="mb-3">
+                {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
+                <label htmlFor='article'>
+                  Brand
+                </label>
+                  <input type='text' className='form-control' defaultValue={newArticle.brand} onChange={e => setNewArticle({...newArticle, brand: e.target.value})} />
+              </div>
+              <div className="mb-3">
+                {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
+                <label htmlFor='article'>
+                  Description
+                </label>
+                  <input type='text' className='form-control' defaultValue={newArticle.description} onChange={e => setNewArticle({...newArticle, description: e.target.value})} />
+              </div>
+              <div className="mb-3">
+                {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
+                <label htmlFor='article'>
+                  Unit price
+                </label>
+                  <input type='number' className='form-control' defaultValue={newArticle.unitPrice} onChange={e => setNewArticle({...newArticle, unitPrice: e.target.value})} />
+              </div>
+              <div className="d-flex justify-content-end">
+              <button
+                  type='button'
+                  className="btn btn-primary"
+                  onClick={async (event) => {
+                    const newArticleDoc = {
+                        fields: {
+                          id: {
+                          stringValue: newArticle.id
+                        },
+                          designation: {
+                          stringValue: newArticle.designation
+                        },
+                          brand: {
+                          stringValue: newArticle.brand
+                        },
+                          description: {
+                          stringValue: newArticle.description
+                        },
+                          unitPrice: {
+                          integerValue: newArticle.unitPrice
+                        },
+                          remaining: {
+                          integerValue: newArticle.remaining
+                        }
+                        }
+                      }
+                    await axios.post('https://firestore.googleapis.com/v1/projects/supplier-proforma/databases/(default)/documents/articles', newArticleDoc).then(res => res.data).then(data => {
+                      const allProducts = [...products]
+                      allProducts.push(newArticleDoc)
+                      setProducts(allProducts)
+                      setNewArticle({id: '', designation: '', brand: '', description: '', unitPrice: 0, remaining: 0})
+                      hideModal()
+                    }).catch(error => alert(error))
+                  }}
+                >
+                  + Add
+                </button>
+              </div>
+            </Modal.Body>
+          </Modal>
+        )} 
       </Stack>
 
       <Card>
