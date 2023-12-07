@@ -48,12 +48,15 @@ const NewPurchaseOrder = () => {
         ParcelCharges: parseFloat(parcel_charges.replace(',', '')),
         Discount: parseFloat(discount.replace(',', '')),
         Payment: payment,
+        Reference: reference,
         IdSupplierNavigation: null,
       },
       PurchaseOrderDetails: all_Purchase_Order_Details,
     }
     await Axios.post('/api/purchase_order/save', purchaseOrderRequest)
-      .then((res) => {})
+      .then((res) => {
+        alert('Bon de commande enregistrer avec success')
+      })
       .catch((error) => {
         alert(error)
       })

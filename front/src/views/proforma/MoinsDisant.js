@@ -1,7 +1,7 @@
 import React from 'react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import Axios from '../../http-client-side/Axios'
 import {
-  CButton,
   CCard,
   CCardBody,
   CCardHeader,
@@ -13,13 +13,25 @@ import {
   CTableHead,
   CTableHeaderCell,
   CTableRow,
-  CForm,
-  CFormInput,
-  CFormLabel,
-  CFormSelect,
 } from '@coreui/react'
 
 const MoinsDisant = () => {
+  const [moinsdisants, setMoinsdisant] = useState([])
+
+  useEffect(() => {
+    fetchListMoinsDisant()
+  }, [])
+
+  const fetchListMoinsDisant = async () => {
+    await Axios.get('/api/moinsdisant')
+      .then((res) => {
+        setMoinsdisant(res.data.moinsdisant)
+      })
+      .catch((error) => {
+        alert(error)
+      })
+  }
+  // console.log(moinsdisants)
   return (
     <CRow>
       <CCol xs={12}>
@@ -43,28 +55,21 @@ const MoinsDisant = () => {
                 </CTableRow>
               </CTableHead>
               <CTableBody>
-                <CTableRow>
-                  <CTableDataCell>BE0001</CTableDataCell>
-                  <CTableDataCell>Gel 500mL</CTableDataCell>
-                  <CTableDataCell>10</CTableDataCell>
-                  <CTableDataCell>1000</CTableDataCell>
-                  <CTableDataCell>20</CTableDataCell>
-                  <CTableDataCell>10000</CTableDataCell>
-                  <CTableDataCell>Shoprite</CTableDataCell>
-                  <CTableDataCell>PR0001</CTableDataCell>
-                  <CTableDataCell>2023-11-30</CTableDataCell>
-                </CTableRow>
-                <CTableRow>
-                  <CTableDataCell>BE0001</CTableDataCell>
-                  <CTableDataCell>Gel 500mL</CTableDataCell>
-                  <CTableDataCell>10</CTableDataCell>
-                  <CTableDataCell>1000</CTableDataCell>
-                  <CTableDataCell>20</CTableDataCell>
-                  <CTableDataCell>10000</CTableDataCell>
-                  <CTableDataCell>Shoprite</CTableDataCell>
-                  <CTableDataCell>PR0001</CTableDataCell>
-                  <CTableDataCell>2023-11-30</CTableDataCell>
-                </CTableRow>
+                {moinsdisants.map((l, index) => {
+                  return (
+                    <CTableRow key={index}>
+                      <CTableDataCell>{l.needNumero}</CTableDataCell>
+                      <CTableDataCell>{l.articleName}</CTableDataCell>
+                      <CTableDataCell>{l.quantity}</CTableDataCell>
+                      <CTableDataCell>{l.unitPrice}</CTableDataCell>
+                      <CTableDataCell>{l.tva}</CTableDataCell>
+                      <CTableDataCell>{l.totalHt}</CTableDataCell>
+                      <CTableDataCell>{l.supplierName}</CTableDataCell>
+                      <CTableDataCell>{l.proformaNumero}</CTableDataCell>
+                      <CTableDataCell>{l.dateReceived}</CTableDataCell>
+                    </CTableRow>
+                  )
+                })}
               </CTableBody>
             </CTable>
           </CCardBody>

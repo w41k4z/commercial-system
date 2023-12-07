@@ -10,5 +10,6 @@ namespace server.Models
         public int? IdArticle { get; set; }
         public double? Quantity { get; set; }
         public DateOnly? FinalDateNeed { get; set; }
+        public string? Article { get; set; }
     }
 }
