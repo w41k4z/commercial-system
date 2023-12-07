@@ -14,11 +14,11 @@ import Iconify from 'src/components/iconify';
 
 // ----------------------------------------------------------------------
 
-export default function UserTableRow({
-  name,
-  firstName,
-  email,
-  contact,
+export default function OrderTableRow({
+  date,
+  orderId,
+  refClient,
+  object,
   selected,
   handleClick,
 }) {
@@ -42,16 +42,16 @@ export default function UserTableRow({
         <TableCell component="th" scope="row" padding="none">
           <Stack direction="row" alignItems="center" spacing={2}>
             <Typography variant="subtitle2" noWrap>
-              {name}
+              {orderId}
             </Typography>
           </Stack>
         </TableCell>
 
-        <TableCell>{firstName}</TableCell>
+        <TableCell>{date}</TableCell>
 
-        <TableCell>{email}</TableCell>
+        <TableCell>{refClient}</TableCell>
         
-        <TableCell>{contact}</TableCell>
+        <TableCell>{object}</TableCell>
 
         <TableCell align="right">
           <IconButton onClick={handleOpenMenu}>
@@ -84,11 +84,11 @@ export default function UserTableRow({
   );
 }
 
-UserTableRow.propTypes = {
-  email: PropTypes.any,
-  contact: PropTypes.any,
+OrderTableRow.propTypes = {
+  orderId: PropTypes.any,
+  date: PropTypes.any,
   handleClick: PropTypes.func,
-  name: PropTypes.any,
-  firstName: PropTypes.string,
+  refClient: PropTypes.any,
+  object: PropTypes.string,
   selected: PropTypes.any,
 };

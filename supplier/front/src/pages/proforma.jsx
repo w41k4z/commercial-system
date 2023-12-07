@@ -1,17 +1,17 @@
 import { Helmet } from 'react-helmet-async';
 
-import { BlogView } from 'src/sections/blog/view';
+import ProformaView from 'src/sections/proforma/view/proforma-view';
 
 // ----------------------------------------------------------------------
 
-export default function BlogPage() {
+export default function ProformaPage() {
   return (
     <>
       <Helmet>
-        <title> Blog | Minimal UI </title>
+        <title> Proforma | Minimal UI </title>
       </Helmet>
 
-      <BlogView />
+      <ProformaView />
     </>
   );
 }

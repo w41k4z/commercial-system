@@ -2,7 +2,7 @@
   "version": 2,
   "dgSpecHash": "NJStVN/MpigOEQjHLcRZKJGWegmkUC7/AFx45RZpt/BdJfIhhGoX15+jAybEZSrgRD2ru5K2qoXjN/S3cp2l/Q==",
   "success": true,
-  "projectFilePath": "/home/johan/Documents/Tovo/New/commercial-system/server/server.csproj",
+  "projectFilePath": "/home/alain/Project/MixTech/commercial-system/server/server.csproj",
   "expectedPackageFiles": [
     "/home/johan/.nuget/packages/bouncycastle.cryptography/2.2.1/bouncycastle.cryptography.2.2.1.nupkg.sha512",
     "/home/johan/.nuget/packages/castle.core/4.4.1/castle.core.4.4.1.nupkg.sha512",
