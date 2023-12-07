@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import NewArticle from './NewArticle'
 import PropTypes from 'prop-types'
-import { handleValueNumberFormat, handleInputNumberFormat } from '../NumberFormatter'
-
+import { handleValueNumberFormat, handleInputNumberFormat } from '../../NumberFormatter'
 const SecondForm = (props) => {
   const {
     setParcelCharges_Props,
@@ -66,7 +65,7 @@ const SecondForm = (props) => {
   return (
     <div id="form-content-1" className="multisteps-form__content">
       <div className="col">
-        <div className="card shadow-sm mb-2 db-graph">
+        <div className="card shadow-sm mb-2 db-graph" id="to_pdf">
           <div className="card-header p-2">
             <h6 className="text-white m-0 font-md">Ajouter les articless selon les besoins</h6>
           </div>

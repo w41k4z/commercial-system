@@ -121,6 +121,13 @@ const _nav = [
     name: 'Bon de sortie',
     to: '/bonmagasin/sortie',
     icon: <CIcon icon={cilAccountLogout} customClassName="nav-icon" />,
+    name: 'Bon de réception',
+  },
+  {
+    component: CNavItem,
+    name: 'Bon de réception',
+    to: '/delivery_receipt/Generate',
+    icon: <CIcon icon={cilList} customClassName="nav-icon" />,
   },
 ]
 
