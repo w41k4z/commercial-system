@@ -16,7 +16,7 @@ import Iconify from 'src/components/iconify';
 export default function ProformaView() {
 
   const [modalVisibility, setModalVisibility] = useState(false)
-  const [article, setArticle] = useState([])
+  const [article, setArticle] = useState()
   const [articles, setArticles] = useState([])
   const [client, setClient] = useState()
   const [clients, setClients] = useState([])
@@ -82,7 +82,8 @@ export default function ProformaView() {
   const getArticleById = (id) => {
     // eslint-disable-next-line no-plusplus
     for (let index = 0; index < products.length; index++) {
-      if (products[index].fields.id.integerValue === id) {
+      if (products[index].fields.id.stringValue === id) {
+        console.log('tonga')
         return products[index];
       }
     }
@@ -157,7 +158,7 @@ export default function ProformaView() {
             </thead>
             <tbody className="px-2">
               {articles.map((each, index) => (<tr>
-              <td>{index + 1}.</td>
+              <td key={index}>{index + 1}.</td>
                 <td>{each.name}</td>
               <td>{each.price}</td>
             </tr>) )}
@@ -184,10 +185,10 @@ export default function ProformaView() {
               <div className="mb-3">
                 <label htmlFor='article'>
                   Nom
-                  <select id='article' className='form-select' onClick={e => setArticle(getArticleById(e.target.value))}>
+                  <select id='article' className='form-select' onChange={e => setArticle(getArticleById(e.target.value))}>
                     <option>Choose</option>
                     {products.map((each, index) => (
-                      <option key={index} value={each.fields.id.integerValue}>
+                      <option key={index} value={each.fields.id.stringValue}>
                         {each.fields.designation.stringValue}
                       </option>
                     ))}
@@ -198,8 +199,9 @@ export default function ProformaView() {
               <button
                   type='button'
                   className="btn btn-primary"
-                  onClick={(event) => {
+                  onClick={() => {
                     if (article) {
+                      console.log('okoko')
                       setArticles([...articles, {
                         name: article.fields.designation.stringValue,
                         price: article.fields.unitPrice.integerValue,
