@@ -13,6 +13,7 @@ const MoinsDisant = React.lazy(() => import('./views/proforma/MoinsDisant'))
 const PurchaseOrder = React.lazy(() => import('./views/purchase_order/new/New'))
 const PurchaseOrderValidation = React.lazy(() => import('./views/purchase_order/status/Validation'))
 const PurchaseOrderDetails = React.lazy(() => import('./views/purchase_order/status/Details'))
+const DeliveryReceipt = React.lazy(() => import('./views/delivery_receipt/DeliveryReceipt'))
 
 const routes = [
   { path: '/crud/article', name: 'Article', element: Article },
@@ -25,6 +26,7 @@ const routes = [
   { path: '/proforma/moinsdisant', name: 'Moins Disant', element: MoinsDisant },
 
   { path: '/purchase_order/new', name: 'Nouveau Bon de commande', element: PurchaseOrder },
+  { path: '/purchase_order/new', name: 'Nouveau Bon de commande', element: PurchaseOrder },
   {
     path: '/purchase_order/validation',
     name: 'Validation de bon de commande',
@@ -35,6 +37,7 @@ const routes = [
     name: 'Validation de bon de commande',
     element: PurchaseOrderDetails,
   },
+  { path: '/delivery_receipt/Generate', name: 'Bon de réception', element: DeliveryReceipt },
 
   { path: '/empty', name: 'Empty', element: Empty },
 ]

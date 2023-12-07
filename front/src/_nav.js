@@ -93,6 +93,16 @@ const _nav = [
     to: '/purchase_order/validation',
     icon: <CIcon icon={cilList} customClassName="nav-icon" />,
   },
+  {
+    component: CNavTitle,
+    name: 'Bon de réception',
+  },
+  {
+    component: CNavItem,
+    name: 'Bon de réception',
+    to: '/delivery_receipt/Generate',
+    icon: <CIcon icon={cilList} customClassName="nav-icon" />,
+  },
 ]
 
 export default _nav

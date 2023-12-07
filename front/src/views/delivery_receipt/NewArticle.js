@@ -1,5 +1,5 @@
 import React from 'react'
-import { handleInputNumberFormat } from '../../NumberFormatter'
+import { handleInputNumberFormat } from '../NumberFormatter'
 import PropTypes from 'prop-types'
 
 const NewArticle = (props) => {
@@ -42,13 +42,24 @@ const NewArticle = (props) => {
       </td>
       <td className="w-10x">
         <div className="mb-1 form-group">
-          <input className="form-control form-control-sm font-sm" type="date" name="date_need" />
+          <select className="form-control form-select form-select-sm tbl-wfx kot-table font-sm">
+            <option value="1" selected="">
+              -- Unité --
+            </option>
+            {articles.map((article, index) => {
+              return (
+                <>
+                  <option value={article.id}>{article.unit}</option>
+                </>
+              )
+            })}
+          </select>
         </div>
       </td>
       <td className="w-10x">
         <div className="mb-1 form-group">
           <input
-            className="form-control form-control-sm font-sm number-input"
+            className="form-control form-control-sm font-sm number-input hiddenColumns"
             type="text"
             name="sale_price"
             onChange={handleInputNumberFormat}
@@ -58,9 +69,9 @@ const NewArticle = (props) => {
       <td className="w-10x">
         <div className="mb-1 form-group">
           <input
-            className="form-control form-control-sm font-sm number-input"
+            className="form-control form-control-sm font-sm number-input hiddenColumns"
             type="text"
-            name="vat"
+            name="total_sale_price"
             onChange={handleInputNumberFormat}
           />
         </div>

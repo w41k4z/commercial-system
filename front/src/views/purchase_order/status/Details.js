@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import '../../../assets/purchase_order/css/Details.css'
 import Modal from 'react-modal'
 import PurchaseOrder_conf from '../conf/Dict'
-import { handleValueNumberFormat } from '../NumberFormatter'
+import { handleValueNumberFormat } from '../../NumberFormatter'
 
 Modal.setAppElement('#root')
 const Details = (props) => {
@@ -88,15 +88,17 @@ const Details = (props) => {
           </h1>
           <hr style={{ ...hrStyle }} />
           <div className="row">
-            <div className="col-4 offset-2">
-              <h5>Mon Entreprise</h5>
-              <label>adresse : 22 avenue Lapa</label>
-              <br />
-              <label>e-mail : joeizn@gmail.com</label>
-              <br />
-              <label>tel : +261 33 45 567 09</label>
-              <br />
-            </div>
+            {company && (
+              <div className="col-4 offset-2">
+                <h5>{company.name}</h5>
+                <label>adresse : {company.address}</label>
+                <br />
+                <label>e-mail : {company.email}</label>
+                <br />
+                <label>tel : {company.tel}</label>
+                <br />
+              </div>
+            )}
             {purchase_order.idSupplierNavigation && (
               <div className="col-6">
                 <h5>Fournisseur : {purchase_order.idSupplierNavigation.name}</h5>
