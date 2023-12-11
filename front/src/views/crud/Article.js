@@ -16,6 +16,7 @@ import {
   CForm,
   CFormInput,
   CFormLabel,
+  CFormSelect,
 } from '@coreui/react'
 
 const Article = () => {
@@ -133,6 +134,18 @@ const Article = () => {
                     id="input4"
                     onChange={handleNewArticleUnitChange}
                   />
+                </CCol>
+              </CRow>
+              <CRow className="mb-3">
+                <CFormLabel htmlFor="input4" className="col-sm-2 col-form-label">
+                  Type Sortie
+                </CFormLabel>
+                <CCol sm={10}>
+                  <CFormSelect>
+                    <option>FIFO</option>
+                    <option>LIFO</option>
+                    <option>PUMP</option>
+                  </CFormSelect>
                 </CCol>
               </CRow>
               <CButton type="submit" onClick={submitNewArticle}>
