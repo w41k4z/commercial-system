@@ -16,8 +16,9 @@ const FirstForm = (props) => {
   }
   const GenerateRef = (e) => {
     const newRef = 'RE' + date + '-' + getRandomInt(10, 99).toString() + '-' + e.target.value
-    setRef(newRef.replace('-', ''))
+    setRef(newRef)
     setReference_Props(ref)
+    console.log(ref)
   }
   const [suppliers, setSuppliers] = useState([])
   useEffect(() => {

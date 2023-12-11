@@ -1,25 +1,27 @@
 {
   "format": 1,
   "restore": {
-    "/home/alain/Project/MixTech/commercial-system/server/server.csproj": {}
+    "D:\\Projects\\Visual Studio Code\\commercial-system\\server\\server.csproj": {}
   },
   "projects": {
-    "/home/alain/Project/MixTech/commercial-system/server/server.csproj": {
+    "D:\\Projects\\Visual Studio Code\\commercial-system\\server\\server.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/alain/Project/MixTech/commercial-system/server/server.csproj",
+        "projectUniqueName": "D:\\Projects\\Visual Studio Code\\commercial-system\\server\\server.csproj",
         "projectName": "server",
-        "projectPath": "/home/alain/Project/MixTech/commercial-system/server/server.csproj",
-        "packagesPath": "/home/alain/.nuget/packages/",
-        "outputPath": "/home/alain/Project/MixTech/commercial-system/server/obj/",
+        "projectPath": "D:\\Projects\\Visual Studio Code\\commercial-system\\server\\server.csproj",
+        "packagesPath": "C:\\Users\\kelyd\\.nuget\\packages\\",
+        "outputPath": "D:\\Projects\\Visual Studio Code\\commercial-system\\server\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/home/alain/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\kelyd\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net6.0"
         ],
         "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -62,11 +64,11 @@
             },
             "Swashbuckle.AspNetCore": {
               "target": "Package",
-              "version": "[6.0.4, )"
+              "version": "[6.2.3, )"
             },
             "System.Text.Json": {
               "target": "Package",
-              "version": "[6.0.4, )"
+              "version": "[7.0.3, )"
             }
           },
           "imports": [
@@ -80,20 +82,6 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
-          "downloadDependencies": [
-            {
-              "name": "Microsoft.AspNetCore.App.Ref",
-              "version": "[6.0.8, 6.0.8]"
-            },
-            {
-              "name": "Microsoft.NETCore.App.Host.linux-x64",
-              "version": "[6.0.8, 6.0.8]"
-            },
-            {
-              "name": "Microsoft.NETCore.App.Ref",
-              "version": "[6.0.8, 6.0.8]"
-            }
-          ],
           "frameworkReferences": {
             "Microsoft.AspNetCore.App": {
               "privateAssets": "none"
@@ -102,7 +90,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/6.0.400/RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.203\\RuntimeIdentifierGraph.json"
         }
       }
     }

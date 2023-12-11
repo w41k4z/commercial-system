@@ -32,8 +32,8 @@ public class DepartmentNeedController : ControllerBase
     [HttpPost]
     public IActionResult CreateEntity(DepartmentNeed entity)
     {
-        entity.DateSend = entity.DateNeed.ToUniversalTime();
-        entity.DateNeed = entity.DateNeed.ToUniversalTime();
+        // entity.DateSend = entity.DateSend.ToUniversalTime();
+        // entity.DateNeed = entity.DateNeed.ToUniversalTime();
         entity.Validation = 0;
         _dbContext.DepartmentNeeds.Add(entity);
         _dbContext.SaveChanges();
@@ -50,8 +50,8 @@ public class DepartmentNeedController : ControllerBase
         }
 
         entityToUpdate.IdDepartment = entity.IdDepartment;
-        entityToUpdate.DateSend = entity.DateSend.ToUniversalTime();
-        entityToUpdate.DateNeed = entity.DateNeed.ToUniversalTime();
+        // entityToUpdate.DateSend = entity.DateSend.ToUniversalTime();
+        // entityToUpdate.DateNeed = entity.DateNeed.ToUniversalTime();
         entityToUpdate.Validation = entity.Validation;
 
         _dbContext.SaveChanges();

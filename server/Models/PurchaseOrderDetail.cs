@@ -16,5 +16,6 @@ namespace server.Models
         public string Description { get; set; } = null!;
 
         public virtual Article? IdArticleNavigation { get; set; } = null!;
+        public virtual PurchaseOrder? IdPurchaseOrderNavigation { get; set; } = null!;
     }
 }

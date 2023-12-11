@@ -98,16 +98,6 @@ const _nav = [
   },
   {
     component: CNavTitle,
-    name: 'Bon de commande',
-  },
-  {
-    component: CNavItem,
-    name: 'Generer',
-    to: '/empty',
-    icon: <CIcon icon={cilPen} customClassName="nav-icon" />,
-  },
-  {
-    component: CNavTitle,
     name: 'Bon de magasin',
   },
   {
@@ -121,7 +111,7 @@ const _nav = [
     name: 'Bon de sortie',
     to: '/bonmagasin/sortie',
     icon: <CIcon icon={cilAccountLogout} customClassName="nav-icon" />,
-    name: 'Bon de réception',
+    name: 'Bon de sortie',
   },
   {
     component: CNavItem,

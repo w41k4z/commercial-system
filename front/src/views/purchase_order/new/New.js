@@ -58,7 +58,7 @@ const NewPurchaseOrder = () => {
         alert('Bon de commande enregistrer avec success')
       })
       .catch((error) => {
-        alert(error)
+        alert(error.message)
       })
   }
   const CheckBuild_Articles_Purchase_Order_Details = () => {

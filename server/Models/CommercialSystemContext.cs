@@ -602,7 +602,12 @@ namespace server.Models
                 entity.HasOne(d => d.IdArticleNavigation)
                     .WithOne(p => p.PurchaseOrderDetail)
                     .HasForeignKey<PurchaseOrderDetail>(d => d.IdArticle)
-                    .HasConstraintName("fk_purchase order_details_article");
+                    .HasConstraintName("fk_purchase_order_details_article");
+
+                entity.HasOne(d => d.IdPurchaseOrderNavigation)
+                    .WithMany(p => p.PurchaseOrderDetails)
+                    .HasForeignKey(d => d.IdPurchaseOrder)
+                    .HasConstraintName("fk_purchase_order_details_purchase_order");
             });
 
             modelBuilder.Entity<Supplier>(entity =>

@@ -6,11 +6,21 @@ CREATE SEQUENCE "public".article_id_seq START WITH 1 INCREMENT BY 1;
 
 CREATE SEQUENCE "public".article_supplier_id_seq START WITH 1 INCREMENT BY 1;
 
+CREATE SEQUENCE "public".bon_entree_details_id_seq AS integer START WITH 1 INCREMENT BY 1;
+
+CREATE SEQUENCE "public".bon_entree_id_seq AS integer START WITH 1 INCREMENT BY 1;
+
+CREATE SEQUENCE "public".bon_sortie_details_id_seq AS integer START WITH 1 INCREMENT BY 1;
+
+CREATE SEQUENCE "public".bon_sortie_id_seq AS integer START WITH 1 INCREMENT BY 1;
+
 CREATE SEQUENCE "public".company_id_seq AS integer START WITH 1 INCREMENT BY 1;
 
 CREATE SEQUENCE "public".department_id_seq START WITH 1 INCREMENT BY 1;
 
 CREATE SEQUENCE "public".department_needs_id_seq START WITH 1 INCREMENT BY 1;
+
+CREATE SEQUENCE "public".magasin_id_seq AS integer START WITH 1 INCREMENT BY 1;
 
 CREATE SEQUENCE "public".need_details_id_seq START WITH 1 INCREMENT BY 1;
 
@@ -67,6 +77,12 @@ CREATE  TABLE "public".department_needs (
 	CONSTRAINT fk_department_needs_department FOREIGN KEY ( id_department ) REFERENCES "public".department( id ) ON DELETE CASCADE ON UPDATE CASCADE 
  );
 
+CREATE  TABLE "public".magasin ( 
+	id                   serial DEFAULT nextval('magasin_id_seq'::regclass) NOT NULL  ,
+	name                 varchar(100)    ,
+	CONSTRAINT magasin_pkey PRIMARY KEY ( id )
+ );
+
 CREATE  TABLE "public".need_details ( 
 	id                   integer DEFAULT nextval('need_details_id_seq'::regclass) NOT NULL  ,
 	quantity             double precision  NOT NULL  ,
@@ -98,19 +114,6 @@ CREATE  TABLE "public".need_group_need (
 	CONSTRAINT fk_need_group_need_need_details FOREIGN KEY ( id_need_details ) REFERENCES "public".need_details( id ) ON DELETE CASCADE ON UPDATE CASCADE 
  );
 
-CREATE  TABLE "public".purchase_order_details ( 
-	id                   integer DEFAULT nextval('"purchase order_details_id_seq"'::regclass) NOT NULL  ,
-	id_purchase_order    integer  NOT NULL  ,
-	id_article           integer  NOT NULL  ,
-	quantity             double precision  NOT NULL  ,
-	date_need            date  NOT NULL  ,
-	status               integer  NOT NULL  ,
-	sale_price           double precision  NOT NULL  ,
-	vat                  double precision  NOT NULL  ,
-	description          varchar  NOT NULL  ,
-	CONSTRAINT "fk_purchase order_details_article" FOREIGN KEY ( id_article ) REFERENCES "public".article( id ) ON DELETE CASCADE ON UPDATE CASCADE 
- );
-
 CREATE  TABLE "public".supplier ( 
 	id                   integer DEFAULT nextval('supplier_id_seq'::regclass) NOT NULL  ,
 	name                 varchar(100)  NOT NULL  ,
@@ -139,6 +142,56 @@ CREATE  TABLE "public".article_supplier (
 	CONSTRAINT pk_article_supplier PRIMARY KEY ( id ),
 	CONSTRAINT fk_article_supplier_article FOREIGN KEY ( id_article ) REFERENCES "public".article( id ) ON DELETE CASCADE ON UPDATE CASCADE ,
 	CONSTRAINT fk_article_supplier_supplier FOREIGN KEY ( id_supplier ) REFERENCES "public".supplier( id ) ON DELETE CASCADE ON UPDATE CASCADE 
+ );
+
+CREATE  TABLE "public".bon_entree ( 
+	id                   serial DEFAULT nextval('bon_entree_id_seq'::regclass) NOT NULL  ,
+	id_magasin           integer    ,
+	date_entree          date    ,
+	id_supplier          integer    ,
+	id_remis_par         integer    ,
+	id_recu_par          integer    ,
+	CONSTRAINT bon_entree_pkey PRIMARY KEY ( id ),
+	CONSTRAINT bon_entree_id_supplier_fkey FOREIGN KEY ( id_supplier ) REFERENCES "public".supplier( id )   ,
+	CONSTRAINT bon_entree_id_recu_par_fkey FOREIGN KEY ( id_recu_par ) REFERENCES "public".account( id )   ,
+	CONSTRAINT bon_entree_id_remis_par_fkey FOREIGN KEY ( id_remis_par ) REFERENCES "public".account( id )   ,
+	CONSTRAINT bon_entree_id_magasin_fkey FOREIGN KEY ( id_magasin ) REFERENCES "public".magasin( id )   
+ );
+
+CREATE  TABLE "public".bon_entree_details ( 
+	id                   serial DEFAULT nextval('bon_entree_details_id_seq'::regclass) NOT NULL  ,
+	id_bon_entree        integer    ,
+	id_article           integer    ,
+	quantite             double precision    ,
+	observation          varchar(200)    ,
+	CONSTRAINT bon_entree_details_pkey PRIMARY KEY ( id ),
+	CONSTRAINT bon_entree_details_id_article_fkey FOREIGN KEY ( id_article ) REFERENCES "public".article( id )   ,
+	CONSTRAINT bon_entree_details_id_bon_entree_fkey FOREIGN KEY ( id_bon_entree ) REFERENCES "public".bon_entree( id )   
+ );
+
+CREATE  TABLE "public".bon_sortie ( 
+	id                   serial DEFAULT nextval('bon_sortie_id_seq'::regclass) NOT NULL  ,
+	date_sortie          date    ,
+	id_demande           integer    ,
+	id_remis             integer    ,
+	id_magasin           integer    ,
+	CONSTRAINT bon_sortie_pkey PRIMARY KEY ( id ),
+	CONSTRAINT bon_sortie_id_magasin_fkey FOREIGN KEY ( id_magasin ) REFERENCES "public".magasin( id )   ,
+	CONSTRAINT bon_sortie_id_remis_fkey FOREIGN KEY ( id_remis ) REFERENCES "public".account( id )   ,
+	CONSTRAINT bon_sortie_id_demande_fkey FOREIGN KEY ( id_demande ) REFERENCES "public".account( id )   
+ );
+
+CREATE  TABLE "public".bon_sortie_details ( 
+	id                   serial DEFAULT nextval('bon_sortie_details_id_seq'::regclass) NOT NULL  ,
+	id_bon_sortie        integer    ,
+	id_article           integer    ,
+	quantite_demande     double precision    ,
+	quantite_livre       double precision    ,
+	prix_unitaire        double precision    ,
+	total                double precision    ,
+	CONSTRAINT bon_sortie_details_pkey PRIMARY KEY ( id ),
+	CONSTRAINT bon_sortie_details_id_article_fkey FOREIGN KEY ( id_article ) REFERENCES "public".article( id )   ,
+	CONSTRAINT bon_sortie_details_id_bon_sortie_fkey FOREIGN KEY ( id_bon_sortie ) REFERENCES "public".bon_sortie( id )   
  );
 
 CREATE  TABLE "public".proforma_send ( 
@@ -173,6 +226,20 @@ CREATE  TABLE "public".purchase_order (
 	reference            varchar  NOT NULL  ,
 	CONSTRAINT pk_purchase_order PRIMARY KEY ( id ),
 	CONSTRAINT fk_purchase_order_supplier FOREIGN KEY ( id_supplier ) REFERENCES "public".supplier( id ) ON DELETE CASCADE ON UPDATE CASCADE 
+ );
+
+CREATE  TABLE "public".purchase_order_details ( 
+	id                   integer DEFAULT nextval('"purchase order_details_id_seq"'::regclass) NOT NULL  ,
+	id_purchase_order    integer  NOT NULL  ,
+	id_article           integer  NOT NULL  ,
+	quantity             double precision  NOT NULL  ,
+	date_need            date  NOT NULL  ,
+	status               integer  NOT NULL  ,
+	sale_price           double precision  NOT NULL  ,
+	vat                  double precision  NOT NULL  ,
+	description          varchar  NOT NULL  ,
+	CONSTRAINT fk_purchase_order_details_article FOREIGN KEY ( id_article ) REFERENCES "public".article( id ) ON DELETE CASCADE ON UPDATE CASCADE ,
+	CONSTRAINT fk_purchase_order_details_purchase_order FOREIGN KEY ( id_purchase_order ) REFERENCES "public".purchase_order( id ) ON DELETE CASCADE ON UPDATE CASCADE 
  );
 
 CREATE  TABLE "public".proforma ( 
@@ -222,6 +289,17 @@ CREATE OR REPLACE VIEW "public".moins_disant AS SELECT ng.numero AS need_numero,
             min(proforma_details.unit_price) AS min
            FROM proforma_details
           GROUP BY proforma_details.id_need_group));
+
+CREATE OR REPLACE VIEW "public".v_account AS SELECT a.id,     a.email,     a.password,     a.profil,     a.id_department,     a.fullname,     d.name AS department_name    FROM (account a      JOIN department d ON ((d.id = a.id_department)))
+ SELECT a.id,
+    a.email,
+    a.password,
+    a.profil,
+    a.id_department,
+    a.fullname,
+    d.name AS department_name
+   FROM (account a
+     JOIN department d ON ((d.id = a.id_department)));
 
 CREATE OR REPLACE VIEW "public".v_article_email AS SELECT ps.id,     ng.quantity,     a.name,     a.unit    FROM (((proforma_send ps      JOIN proforma_send_need_group psng ON ((ps.id = psng.id_proforma_send)))      JOIN need_group ng ON ((ng.id = psng.id_need_group)))      JOIN article a ON ((a.id = ng.id_article)))
  SELECT ps.id,
@@ -276,6 +354,59 @@ CREATE OR REPLACE VIEW "public".v_besoin_a_grouper AS SELECT v_besoin.department
    FROM v_besoin
   WHERE ((v_besoin.validation = 1) AND (NOT (v_besoin.id_need_details IN ( SELECT need_group_need.id_need_details
            FROM need_group_need))));
+
+CREATE OR REPLACE VIEW "public".v_bon_entree AS SELECT be.id,     be.id_magasin,     be.date_entree,     be.id_supplier,     be.id_remis_par,     be.id_recu_par,     m.name AS magasin_name,     s.name AS supplier_name,     a1.fullname AS remis_par_name,     a2.fullname AS recu_par_name    FROM ((((bon_entree be      JOIN magasin m ON ((m.id = be.id_magasin)))      JOIN supplier s ON ((s.id = be.id_supplier)))      JOIN account a1 ON ((a1.id = be.id_remis_par)))      JOIN account a2 ON ((a2.id = be.id_recu_par)))
+ SELECT be.id,
+    be.id_magasin,
+    be.date_entree,
+    be.id_supplier,
+    be.id_remis_par,
+    be.id_recu_par,
+    m.name AS magasin_name,
+    s.name AS supplier_name,
+    a1.fullname AS remis_par_name,
+    a2.fullname AS recu_par_name
+   FROM ((((bon_entree be
+     JOIN magasin m ON ((m.id = be.id_magasin)))
+     JOIN supplier s ON ((s.id = be.id_supplier)))
+     JOIN account a1 ON ((a1.id = be.id_remis_par)))
+     JOIN account a2 ON ((a2.id = be.id_recu_par)));
+
+CREATE OR REPLACE VIEW "public".v_bon_entree_details AS SELECT bed.id,     bed.id_bon_entree,     bed.id_article,     bed.quantite,     bed.observation,     a.name AS article_name    FROM (bon_entree_details bed      JOIN article a ON ((a.id = bed.id_article)))
+ SELECT bed.id,
+    bed.id_bon_entree,
+    bed.id_article,
+    bed.quantite,
+    bed.observation,
+    a.name AS article_name
+   FROM (bon_entree_details bed
+     JOIN article a ON ((a.id = bed.id_article)));
+
+CREATE OR REPLACE VIEW "public".v_bon_sortie AS SELECT bs.id,     bs.date_sortie,     bs.id_demande,     bs.id_remis,     bs.id_magasin,     a1.fullname AS demande_name,     a2.fullname AS remis_name,     m.name AS magasin_name    FROM (((bon_sortie bs      JOIN account a1 ON ((a1.id = bs.id_demande)))      JOIN account a2 ON ((a2.id = bs.id_remis)))      JOIN magasin m ON ((m.id = bs.id_magasin)))
+ SELECT bs.id,
+    bs.date_sortie,
+    bs.id_demande,
+    bs.id_remis,
+    bs.id_magasin,
+    a1.fullname AS demande_name,
+    a2.fullname AS remis_name,
+    m.name AS magasin_name
+   FROM (((bon_sortie bs
+     JOIN account a1 ON ((a1.id = bs.id_demande)))
+     JOIN account a2 ON ((a2.id = bs.id_remis)))
+     JOIN magasin m ON ((m.id = bs.id_magasin)));
+
+CREATE OR REPLACE VIEW "public".v_bon_sortie_detials AS SELECT bsd.id,     bsd.id_bon_sortie,     bsd.id_article,     bsd.quantite_demande,     bsd.quantite_livre,     bsd.prix_unitaire,     bsd.total,     a.name AS article_name    FROM (bon_sortie_details bsd      JOIN article a ON ((a.id = bsd.id_article)))
+ SELECT bsd.id,
+    bsd.id_bon_sortie,
+    bsd.id_article,
+    bsd.quantite_demande,
+    bsd.quantite_livre,
+    bsd.prix_unitaire,
+    bsd.total,
+    a.name AS article_name
+   FROM (bon_sortie_details bsd
+     JOIN article a ON ((a.id = bsd.id_article)));
 
 CREATE OR REPLACE VIEW "public".v_group_non_proformer AS SELECT n.id,     n.numero,     n.id_article,     n.quantity,     n.final_date_need,     a.name AS article    FROM (need_group n      JOIN article a ON ((a.id = n.id_article)))   WHERE (NOT (n.id IN ( SELECT proforma_send_need_group.id_need_group            FROM proforma_send_need_group)))
  SELECT n.id,
@@ -370,21 +501,22 @@ CREATE OR REPLACE VIEW "public".v_proforma_send_need_group AS SELECT psng.id,   
      JOIN need_group ng ON ((ng.id = psng.id_need_group)))
      JOIN article a ON ((a.id = ng.id_article)));
 
-INSERT INTO "public".article( id, name, unit ) VALUES ( 1, 'Article 1', 'Piece');
-INSERT INTO "public".article( id, name, unit ) VALUES ( 2, 'Article 2', 'Set');
-INSERT INTO "public".article( id, name, unit ) VALUES ( 3, 'Article 3', 'Box');
+INSERT INTO "public".article( id, name, unit ) VALUES ( 1, 'Charbon', 'kg');
+INSERT INTO "public".article( id, name, unit ) VALUES ( 2, 'Composte', 'm3');
+INSERT INTO "public".article( id, name, unit ) VALUES ( 3, 'Beton Plastique', 'm3');
 INSERT INTO "public".company( id, name, address, tel, email ) VALUES ( 1, 'CLFournisseur', 'Lot III AB 50', '0323245671', 'clf@gmail.com');
 INSERT INTO "public".department( id, name ) VALUES ( 1, 'Sales');
 INSERT INTO "public".department( id, name ) VALUES ( 2, 'Marketing');
 INSERT INTO "public".department( id, name ) VALUES ( 3, 'Finance');
+INSERT INTO "public".magasin( id, name ) VALUES ( 1, 'Magasin1');
+INSERT INTO "public".magasin( id, name ) VALUES ( 2, 'Magasin2');
+INSERT INTO "public".magasin( id, name ) VALUES ( 3, 'Magasin3');
 INSERT INTO "public".need_group( id, numero, id_article, quantity, final_date_need ) VALUES ( 14, 'NG2', 2, 20.0, '2023-11-26');
 INSERT INTO "public".need_group( id, numero, id_article, quantity, final_date_need ) VALUES ( 15, 'NG5', 3, 7.0, '2023-11-29');
 INSERT INTO "public".need_group( id, numero, id_article, quantity, final_date_need ) VALUES ( 13, 'NG1', 1, 38.0, '2023-11-25');
-INSERT INTO "public".purchase_order_details( id, id_purchase_order, id_article, quantity, date_need, status, sale_price, vat, description ) VALUES ( 1, 3, 1, 10.0, '2023-11-30', 0, 10000.0, 20.0, 'desc');
-INSERT INTO "public".purchase_order_details( id, id_purchase_order, id_article, quantity, date_need, status, sale_price, vat, description ) VALUES ( 2, 3, 2, 20.0, '2023-11-30', 0, 20000.0, 20.0, 'desc2');
-INSERT INTO "public".supplier( id, name, address, email, phone_number ) VALUES ( 1, 'Supplier 1', 'Address 1', 'kelydoda724@gmail.com', '1234567890');
-INSERT INTO "public".supplier( id, name, address, email, phone_number ) VALUES ( 2, 'Supplier 2', 'Address 2', 'kelydoda724@gmail.com', '9876543210');
-INSERT INTO "public".supplier( id, name, address, email, phone_number ) VALUES ( 3, 'Supplier 3', 'Address 3', 'kelydoda724@gmail.com', '5555555555');
+INSERT INTO "public".supplier( id, name, address, email, phone_number ) VALUES ( 1, 'CHIMIC', 'Lot D1 F Antananarivo', 'kelydoda724@gmail.com', '+261 32 24 567 45');
+INSERT INTO "public".supplier( id, name, address, email, phone_number ) VALUES ( 2, 'ZAFI ALA', 'Lot H F Ambato', 'kelydoda724@gmail.com', '+261 32 23 245 67');
+INSERT INTO "public".supplier( id, name, address, email, phone_number ) VALUES ( 3, 'GASY Tontolo', 'Lot H F Fenerive-Est', 'kelydoda724@gmail.com', '+261 32 23 245 67');
 INSERT INTO "public".account( id, email, "password", profil, id_department, fullname ) VALUES ( 10, 'john@example.com', 'pass123', 'admin', 1, 'John Doe');
 INSERT INTO "public".account( id, email, "password", profil, id_department, fullname ) VALUES ( 11, 'jane@example.com', 'pass456', 'manager', 1, 'Jane Smith');
 INSERT INTO "public".account( id, email, "password", profil, id_department, fullname ) VALUES ( 12, 'alice@example.com', 'pass789', 'employee', 1, 'Alice Johnson');
@@ -394,6 +526,19 @@ INSERT INTO "public".account( id, email, "password", profil, id_department, full
 INSERT INTO "public".account( id, email, "password", profil, id_department, fullname ) VALUES ( 16, 'sarah@example.com', 'pass123', 'admin', 3, 'Sarah Wilson');
 INSERT INTO "public".account( id, email, "password", profil, id_department, fullname ) VALUES ( 17, 'david@example.com', 'pass456', 'manager', 3, 'David Garcia');
 INSERT INTO "public".account( id, email, "password", profil, id_department, fullname ) VALUES ( 18, 'olivia@example.com', 'pass789', 'employee', 3, 'Olivia Martinez');
+INSERT INTO "public".bon_entree( id, id_magasin, date_entree, id_supplier, id_remis_par, id_recu_par ) VALUES ( 1, 1, '2021-01-01', 1, 12, 11);
+INSERT INTO "public".bon_entree( id, id_magasin, date_entree, id_supplier, id_remis_par, id_recu_par ) VALUES ( 2, 3, '2023-12-30', 2, 11, 12);
+INSERT INTO "public".bon_entree( id, id_magasin, date_entree, id_supplier, id_remis_par, id_recu_par ) VALUES ( 3, 2, '2023-01-01', 2, 12, 11);
+INSERT INTO "public".bon_entree_details( id, id_bon_entree, id_article, quantite, observation ) VALUES ( 1, 1, 1, 10.0, 'bla');
+INSERT INTO "public".bon_entree_details( id, id_bon_entree, id_article, quantite, observation ) VALUES ( 2, 1, 2, 10.0, 'bla');
+INSERT INTO "public".bon_entree_details( id, id_bon_entree, id_article, quantite, observation ) VALUES ( 3, 2, 1, 10.0, 'bla');
+INSERT INTO "public".bon_entree_details( id, id_bon_entree, id_article, quantite, observation ) VALUES ( 4, 3, 2, 10.0, 'bla');
+INSERT INTO "public".bon_sortie( id, date_sortie, id_demande, id_remis, id_magasin ) VALUES ( 2, '2023-01-01', 12, 11, 1);
+INSERT INTO "public".bon_sortie( id, date_sortie, id_demande, id_remis, id_magasin ) VALUES ( 3, '2023-01-01', 12, 11, 2);
+INSERT INTO "public".bon_sortie_details( id, id_bon_sortie, id_article, quantite_demande, quantite_livre, prix_unitaire, total ) VALUES ( 1, 2, 2, 10.0, 5.0, 100.0, 500.0);
+INSERT INTO "public".bon_sortie_details( id, id_bon_sortie, id_article, quantite_demande, quantite_livre, prix_unitaire, total ) VALUES ( 2, 2, 1, 5.0, 2.0, 100.0, 200.0);
+INSERT INTO "public".bon_sortie_details( id, id_bon_sortie, id_article, quantite_demande, quantite_livre, prix_unitaire, total ) VALUES ( 3, 3, 2, 100.0, 10.0, 100.0, 1000.0);
+INSERT INTO "public".bon_sortie_details( id, id_bon_sortie, id_article, quantite_demande, quantite_livre, prix_unitaire, total ) VALUES ( 4, 3, 1, 100.0, 10.0, 100.0, 1000.0);
 INSERT INTO "public".proforma_send( id, date_send, id_supplier, numero ) VALUES ( 2, '2023-11-10', 2, 'ENV2');
 INSERT INTO "public".proforma_send( id, date_send, id_supplier, numero ) VALUES ( 4, '2023-11-11', 3, 'ENV4');
 INSERT INTO "public".proforma_send( id, date_send, id_supplier, numero ) VALUES ( 5, '2023-11-10', 3, 'ENV5');
@@ -407,7 +552,10 @@ INSERT INTO "public".proforma_send_need_group( id, id_proforma_send, id_need_gro
 INSERT INTO "public".proforma_send_need_group( id, id_proforma_send, id_need_group ) VALUES ( 6, 6, 14);
 INSERT INTO "public".proforma_send_need_group( id, id_proforma_send, id_need_group ) VALUES ( 7, 7, 13);
 INSERT INTO "public".proforma_send_need_group( id, id_proforma_send, id_need_group ) VALUES ( 8, 7, 14);
-INSERT INTO "public".purchase_order( id, date_send, validation, id_supplier, sum_ht, sum_vat, sum_ttc, parcel_charges, discount, payment, reference ) VALUES ( 3, '2023-11-30', 0, 1, 500000.0, 100000.0, 720000.0, 50000.0, 0.0, 10, 'RE202311-30-50-2');
+INSERT INTO "public".purchase_order( id, date_send, validation, id_supplier, sum_ht, sum_vat, sum_ttc, parcel_charges, discount, payment, reference ) VALUES ( 7, '2023-01-01', 0, 2, 1000.0, 200000.0, 1200.0, 50000.0, 0.0, 10, '');
+INSERT INTO "public".purchase_order( id, date_send, validation, id_supplier, sum_ht, sum_vat, sum_ttc, parcel_charges, discount, payment, reference ) VALUES ( 8, '2023-01-01', 0, 3, 10000.0, 2000.0, 12000.0, 50000.0, 0.0, 10, 'RE2023-01-01-30-2');
+INSERT INTO "public".purchase_order_details( id, id_purchase_order, id_article, quantity, date_need, status, sale_price, vat, description ) VALUES ( 6, 7, 2, 100.0, '2023-01-01', 0, 10000.0, 20.0, 'desc');
+INSERT INTO "public".purchase_order_details( id, id_purchase_order, id_article, quantity, date_need, status, sale_price, vat, description ) VALUES ( 7, 8, 1, 1000.0, '2023-01-01', 0, 10000.0, 20.0, 'desc');
 INSERT INTO "public".proforma( id, date_received, total_ht, id_proforma_send, total_tva, total_ttc, numero ) VALUES ( 9, '2023-10-10', 580.0, 2, 0.0, 580.0, 'PRF9');
 INSERT INTO "public".proforma( id, date_received, total_ht, id_proforma_send, total_tva, total_ttc, numero ) VALUES ( 10, '2023-11-20', 3800.0, 4, 0.0, 3800.0, 'PRF10');
 INSERT INTO "public".proforma_details( id, quantity, tva, unit_price, total_ht, id_proforma, id_article, id_need_group ) VALUES ( 12, 20.0, 0.0, 10.0, 200.0, 9, 2, 14);
